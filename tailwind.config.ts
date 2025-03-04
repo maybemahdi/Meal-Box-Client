@@ -9,10 +9,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        "blue-primary": "#3C55A5",
-        "green-primary": "#1BB68A",
-        "green-light": "#E8F8F3",
-        "gray-light": "#4B5563",
+        "text-primary": "#212121",
+        "text-secondary": "#5B5454",
+        primary: "#1F6306",
       },
       container: {
         screens: {
@@ -22,10 +21,10 @@ export default {
         padding: "1.2rem",
       },
       screens: {
-        xs: "540px", 
+        xs: "540px",
       },
     },
   },
-  
+
   plugins: [],
 } satisfies Config;
