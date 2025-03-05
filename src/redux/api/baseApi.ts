@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
     const access_token = (getState() as RootState).auth.access_token;
     headers.set("accept", "application/json");
     if (access_token) {
-      headers.set("authorization", `Bearer ${access_token}`);
+      headers.set("authorization", `${access_token}`);
     }
     return headers;
   },
@@ -52,7 +52,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            authorization: `Bearer ${refreshToken}`,
+            authorization: `${refreshToken}`,
           },
         }
       );
@@ -97,7 +97,7 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
   tagTypes: [
-    "user", "example"
+    "user", "example", "contact"
   ],
   endpoints: () => ({}),
 });

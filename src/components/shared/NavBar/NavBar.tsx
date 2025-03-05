@@ -15,8 +15,8 @@ const NavBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
-    <div className="shadow-md">
-      <div className="flex justify-between items-center bg-white w-[90%] mx-auto md:py-1">
+    <div className="bg-white shadow-md sticky top-0 z-[1000]">
+      <div className="flex justify-between items-center w-[90%] mx-auto md:py-1">
         {/* Logo */}
         <div className="flex items-center">
           <Image src={logo} alt="Logo" height={80} width={80} />
@@ -24,7 +24,7 @@ const NavBar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex gap-8 items-center">
+        <div className="hidden md:flex justify-center gap-12 items-center">
           {menuItems.map((menu, idx) => (
             <Link
               href={menu.path}
