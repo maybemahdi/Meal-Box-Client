@@ -18,9 +18,14 @@ const NavBar = () => {
     <div className="bg-white shadow-md sticky top-0 z-[1000]">
       <div className="flex justify-between items-center w-[90%] mx-auto md:py-1">
         {/* Logo */}
-        <div className="flex items-center">
+        <div
+          onClick={() => router.push("/")}
+          className="flex items-center justify-center cursor-pointer"
+        >
           <Image src={logo} alt="Logo" height={80} width={80} />
-          <p>MealBox</p>
+          <p className="text-lg font-semibold mt-3">
+            MealBox
+          </p>
         </div>
 
         {/* Desktop Navigation */}
