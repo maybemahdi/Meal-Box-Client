@@ -6,13 +6,45 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { menuItems } from "@/data/menuItems";
 import Button from "../Button/Button";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import logo from "@/assets/images/logo.png";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentToken } from "@/redux/features/auth/authSlice";
+import { verifyToken } from "@/utils/verifyToken";
+import { JwtPayload } from "jwt-decode";
+import Swal from "sweetalert2";
 
+interface DecodedUser extends JwtPayload {
+  role: string;
+}
 const NavBar = () => {
+  const dispatch = useAppDispatch();
   const pathname = usePathname();
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const currentUserToken = useAppSelector(selectCurrentToken);
+  const currentUser = currentUserToken ? verifyToken(currentUserToken) : null;
+
+  const handleLogOut = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Log out!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(logout());
+        Swal.fire({
+          title: "Successful!",
+          text: "Your have been logged out.",
+          icon: "success",
+        });
+      }
+    });
+  };
 
   return (
     <div className="bg-white shadow-md sticky top-0 z-[1000]">
@@ -23,13 +55,11 @@ const NavBar = () => {
           className="flex items-center justify-center cursor-pointer"
         >
           <Image src={logo} alt="Logo" height={80} width={80} />
-          <p className="text-lg font-semibold mt-3">
-            MealBox
-          </p>
+          <p className="text-lg font-semibold mt-3">MealBox</p>
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex justify-center gap-12 items-center">
+        <div className="hidden lg:flex justify-center gap-12 items-center">
           {menuItems.map((menu, idx) => (
             <Link
               href={menu.path}
@@ -45,22 +75,44 @@ const NavBar = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="hidden md:flex gap-5">
-          <Button
-            onClick={() => router.push("/register")}
-            label="Sign up"
-            variant="outline"
-          />
-          <Button
-            onClick={() => router.push("/login")}
-            label="Sign in"
-            variant="filled"
-          />
-        </div>
+        {currentUser ? (
+          <div className="hidden lg:flex gap-5">
+            <Button
+              onClick={() =>
+                router.push(
+                  `/dashboard/${(
+                    currentUser as DecodedUser
+                  )?.role.toLowerCase()}`
+                )
+              }
+              label="Dashboard"
+              variant="outline"
+            />
+            <button
+              onClick={handleLogOut}
+              className="bg-slate-100 hover:bg-slate-200 transition-all duration-300 px-3 py-2 rounded-md text-gray-500"
+            >
+              <LogOut />
+            </button>
+          </div>
+        ) : (
+          <div className="hidden lg:flex gap-5">
+            <Button
+              onClick={() => router.push("/register")}
+              label="Sign up"
+              variant="outline"
+            />
+            <Button
+              onClick={() => router.push("/login")}
+              label="Sign in"
+              variant="filled"
+            />
+          </div>
+        )}
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden focus:outline-none"
+          className="lg:hidden focus:outline-none"
           onClick={() => setIsDrawerOpen(true)}
         >
           <Menu size={28} />
@@ -111,20 +163,43 @@ const NavBar = () => {
           </div>
 
           {/* Mobile Action Buttons */}
-          <div className="mt-5 flex flex-col gap-3">
-            <Button
-              onClick={() => router.push("/register")}
-              label="Sign up"
-              variant="outline"
-              fullWidth
-            />
-            <Button
-              onClick={() => router.push("/login")}
-              label="Sign in"
-              variant="filled"
-              fullWidth
-            />
-          </div>
+          {currentUser ? (
+            <div className="lg:hidden flex flex-col gap-5 mt-5">
+              <Button
+                onClick={() =>
+                  router.push(
+                    `/dashboard/${(
+                      currentUser as DecodedUser
+                    )?.role.toLowerCase()}`
+                  )
+                }
+                label="Dashboard"
+                variant="outline"
+                fullWidth
+              />
+              <button
+                onClick={handleLogOut}
+                className="bg-slate-100 flex items-center gap-2 justify-center hover:bg-slate-200 transition-all duration-300 px-3 py-2 rounded-md text-gray-500"
+              >
+                <LogOut /> Sign out
+              </button>
+            </div>
+          ) : (
+            <div className="lg:hidden flex flex-col gap-5 mt-5">
+              <Button
+                onClick={() => router.push("/register")}
+                label="Sign up"
+                variant="outline"
+                fullWidth
+              />
+              <Button
+                onClick={() => router.push("/login")}
+                label="Sign in"
+                variant="filled"
+                fullWidth
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -5,6 +6,7 @@ import SessionProviderForNextAuth from "@/nextAuth/SessionProviderForNextAuth";
 import ReduxStoreProvider from "@/redux/ReduxStoreProvider";
 import { Toaster } from "sonner";
 import MyContextProvider from "@/lib/MyContextProvider";
+import ConfigProviderForAntd from "@/providers/ConfigProviderForAntd";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800"],
@@ -29,10 +31,12 @@ export default function RootLayout({
       >
         <MyContextProvider>
           {/* <SessionProviderForNextAuth> */}
-            <ReduxStoreProvider>
+          <ReduxStoreProvider>
+            <ConfigProviderForAntd>
               <Toaster />
               {children}
-            </ReduxStoreProvider>
+            </ConfigProviderForAntd>
+          </ReduxStoreProvider>
           {/* </SessionProviderForNextAuth> */}
         </MyContextProvider>
       </body>

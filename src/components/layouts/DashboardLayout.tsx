@@ -13,6 +13,8 @@ import {
   Users,
   LogOut,
   Car,
+  UtensilsCrossed,
+  UserPen,
 } from "lucide-react";
 import { toast } from "sonner";
 import { IoAdd } from "react-icons/io5";
@@ -20,7 +22,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import Link from "next/link";
-import { RxAvatar } from "react-icons/rx";
 
 const DashboardLayout = ({
   children,
@@ -53,7 +54,7 @@ const DashboardLayout = ({
         path: "/dashboard/customer/preferences",
       },
       {
-        icon: RxAvatar,
+        icon: UserPen,
         text: "Profile",
         path: "/dashboard/customer/profile",
       },
@@ -61,11 +62,31 @@ const DashboardLayout = ({
   }
   if (role === "PROVIDER") {
     menuItems = [
+      { icon: Home, text: "Dashboard", path: "/dashboard/customer" },
+      {
+        icon: BarChart3,
+        text: "Track Orders",
+        path: "/dashboard/customer/my-orders",
+      },
+      {
+        icon: UtensilsCrossed,
+        text: "Manage Meals",
+        path: "/dashboard/customer/manage-meals",
+      },
+      {
+        icon: UserPen,
+        text: "Profile",
+        path: "/dashboard/customer/profile",
+      },
+    ];
+  }
+  if (role === "ADMIN") {
+    menuItems = [
       { icon: Home, text: "Dashboard", path: "/dashboard" },
       {
         icon: BarChart3,
-        text: "Order Management",
-        path: "/dashboard/order-management",
+        text: "All Order",
+        path: "/dashboard/orders",
       },
       {
         icon: Users,
@@ -73,7 +94,7 @@ const DashboardLayout = ({
         path: "/dashboard/user-management",
       },
       {
-        icon: Settings,
+        icon: UserPen,
         text: "Profile",
         path: "/dashboard/my-profile",
       },

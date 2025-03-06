@@ -30,23 +30,38 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
+  // Check if the request failed with a 401 (Unauthorized)
   if (result.error?.status === 401) {
     try {
       const refreshToken = (api.getState() as RootState).auth.refresh_token;
+      const user = (api.getState() as RootState).auth.user;
 
-      // if (!refreshToken) {
-      //   api.dispatch(logout());
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Session Expired",
-      //     text: "Please login again to continue",
-      //   });
-      //   return result;
-      // }
+      // If there's NO refresh token, user is likely not logged in or session is expired
+      if (!refreshToken) {
+        // Check if the request was for logging in (avoid refresh in this case)
+        const isLoginRequest =
+          typeof args === "string"
+            ? args.includes("/login")
+            : (args.url as string).includes("/login");
+
+        if (isLoginRequest) {
+          // Do nothing special, just return the error from the login attempt
+          return result;
+        }
+
+        // Otherwise, show session expired alert and logout
+        api.dispatch(logout());
+        Swal.fire({
+          icon: "error",
+          title: "Session Expired",
+          text: "Please login again to continue",
+        });
+        return result;
+      }
 
       // Make a request to refresh the token
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}refresh-token`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh-token`,
         {
           method: "POST",
           credentials: "include",
@@ -58,15 +73,20 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       );
 
       const data = await res.json();
+
       if (data?.success) {
-        const user = (api.getState() as RootState).auth.user;
         api.dispatch(
-          setUser({ user, token: data.data.token, refresh_token: refreshToken })
+          setUser({
+            user,
+            access_token: data.data.access_token,
+            refresh_token: refreshToken,
+          })
         );
 
         // Retry the original query with the new token
         result = await baseQuery(args, api, extraOptions);
       } else {
+        // If refresh token fails, logout and show alert
         Swal.fire({
           icon: "error",
           title: "Session Expired",
@@ -74,15 +94,10 @@ const baseQueryWithRefreshToken: BaseQueryFn<
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: "Stay Logged Out",
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }).then((result) => {
-          if (result.isConfirmed) {
-            api.dispatch(logout());
-            signOut();
-          }
-          else if (result.isDismissed) {
-            api.dispatch(logout());
-            signOut();
-          }
+          api.dispatch(logout());
+          signOut();
         });
       }
     } catch (error) {
@@ -96,8 +111,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: [
-    "user", "example", "contact"
-  ],
+  tagTypes: ["user", "example", "contact"],
   endpoints: () => ({}),
 });

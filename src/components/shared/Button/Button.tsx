@@ -8,6 +8,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   customBg?: string;
   customPY?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,9 +18,11 @@ const Button: React.FC<ButtonProps> = ({
   fullWidth,
   customBg,
   customPY,
+  type = "button",
 }) => {
   return (
     <button
+      type={type}
       onClick={onClick}
       style={{
         ...(customBg ? { backgroundColor: customBg } : {}),
