@@ -1,35 +1,34 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+"use client";
 
-import type React from 'react';
+import type React from "react";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import MyFormWrapper from '@/components/ui/MyForm/MyFormWrapper/MyFormWrapper';
-import { zodResolver } from '@hookform/resolvers/zod';
-import MyFormInput from '@/components/ui/MyForm/MyFormInput/MyFormInput';
-import MyFormCheckbox from '@/components/ui/MyForm/MyFormCheckbox/MyFormCheckbox';
-import Button from '@/components/shared/Button/Button';
-import { z } from 'zod';
-import { useLoginMutation } from '@/redux/features/auth/authApi';
-import { useAppDispatch } from '@/redux/hooks';
-import { useRouter } from 'next/navigation';
-import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
-import { verifyToken } from '@/utils/verifyToken';
-import { JwtPayload } from 'jwt-decode';
-import { setUser } from '@/redux/features/auth/authSlice';
+import { useState } from "react";
+import Link from "next/link";
+import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
+import MyFormCheckbox from "@/components/ui/MyForm/MyFormCheckbox/MyFormCheckbox";
+import Button from "@/components/shared/Button/Button";
+import { z } from "zod";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useAppDispatch } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { verifyToken } from "@/utils/verifyToken";
+import { JwtPayload } from "jwt-decode";
+import { setUser } from "@/redux/features/auth/authSlice";
 
 const validationSchema = z.object({
   email: z
     .string({
-      required_error: 'Email is required',
+      required_error: "Email is required",
     })
-    .email('Invalid email address'),
-  password: z
-    .string({
-      required_error: 'Password is required',
-    }),
+    .email("Invalid email address"),
+  password: z.string({
+    required_error: "Password is required",
+  }),
   rememberMe: z.boolean().default(false),
 });
 
@@ -46,7 +45,7 @@ export default function LoginPage() {
     console.log(formData);
     const response = await handleAsyncWithToast(async () => {
       return login(formData);
-    }, 'Login in...');
+    }, "Login in...");
     if (response?.data?.success) {
       const user = (await verifyToken(
         response?.data?.data?.accessToken
@@ -60,7 +59,7 @@ export default function LoginPage() {
         })
       );
       reset();
-      router.push('/');
+      router.push("/");
     }
   };
 
@@ -122,7 +121,7 @@ export default function LoginPage() {
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              className="text-green-700 hover:text-green-800 underline"
+              className="text-primary hover:text-emerald-700 underline"
             >
               Sign up
             </Link>

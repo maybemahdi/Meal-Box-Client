@@ -33,7 +33,7 @@ export default function ContactUs() {
     const res = await handleAsyncWithToast(async () => {
       return postContact(data);
     }, "Message Sending...");
-    console.log(res)
+    console.log(res);
     if (res?.data?.success) {
       reset();
     }
@@ -176,7 +176,7 @@ export default function ContactUs() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-primary hover:bg-green-800 text-white text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2"
+                  className="w-full bg-primary hover:bg-emerald-700 text-white text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2"
                 >
                   <MessageSquare className="w-5 h-5 text-white" />
                   Send Message

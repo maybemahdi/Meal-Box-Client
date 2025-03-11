@@ -11,7 +11,7 @@ export default {
       colors: {
         "text-primary": "#212121",
         "text-secondary": "#5B5454",
-        primary: "#15803D",
+        primary: "#059669",
         secondary: "#E9EFE6",
       },
       container: {

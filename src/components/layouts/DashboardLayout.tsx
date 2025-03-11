@@ -188,71 +188,7 @@ const DashboardLayout = ({
         </header>
 
         {/* Main Content Area */}
-        <main className="py-4 px-6 lg:px-8 mt-16">
-          {/* <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={item}
-                  className="p-6 bg-white rounded-lg shadow-sm border border-gray-200"
-                >
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    Card Title {item}
-                  </h3>
-                  <p className="text-gray-600">
-                    This is a sample card with some content. Replace this with
-                    your actual dashboard widgets.
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Recent Activity
-                </h2>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {[1, 2, 3].map((item) => (
-                      <tr key={item}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            User {item}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Active
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          2024-03-{item}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div> */}
-          {children}
-        </main>
+        <main className="py-4 px-6 lg:px-8 mt-16">{children}</main>
       </div>
 
       {/* Overlay */}

@@ -1,0 +1,29 @@
+/* antd pagination for table  */
+
+/* Change the color of the pagination items */
+.custom-pagination .ant-pagination-item {
+  color: #059669; /* Default item color */
+}
+
+/* Change color of previous and next buttons */
+.custom-pagination .ant-pagination-prev,
+.custom-pagination .ant-pagination-next {
+  color: #059669;
+}
+
+/* Light #1F6306 background when hovering */
+.custom-pagination .ant-pagination-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Custom #1F6306 active item */
+.custom-pagination .ant-pagination-item-active {
+  background-color: #059669 !important; /* Custom #1F6306 background */
+  border-color: #059669 !important;
+  color: white !important; /* Apply white text color to active item */
+}
+
+/* Optional: For the active item when it's selected */
+.custom-pagination .ant-pagination-item-active a {
+  color: white !important; /* Ensure the text inside the anchor tag is white */
+}
