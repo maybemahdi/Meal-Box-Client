@@ -9,9 +9,11 @@ import { MealCard } from "./MealCard";
 import { Dropdown, MenuProps, Pagination } from "antd";
 import "./findMeal.css";
 import Search, { SearchProps } from "antd/es/input/Search";
+import { ChevronDown, RotateCcw } from "lucide-react";
 
 const FindMealsPage = () => {
-  const [filterBy, setFilterBy] = useState("");
+  const [filterByAvailability, setFilterByAvailability] = useState("All");
+  const [sortByRating, setSortByRating] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchText, setSearchText] = useState<{ name: string; value: any }[]>(
@@ -22,27 +24,28 @@ const FindMealsPage = () => {
     setPage(page);
     setPageSize(pageSize);
   };
+
   const [objectQuery, setObjectQuery] = useState<
     { name: string; value: any }[]
-  >([
-    { name: "page", value: page },
-    { name: "limit", value: pageSize },
-    { name: "searchTerms", value: searchText },
-  ]);
+  >([]);
 
   useEffect(() => {
     setObjectQuery([
       { name: "page", value: page },
       { name: "limit", value: pageSize },
+      { name: "availability", value: filterByAvailability },
+      { name: "sort", value: sortByRating },
       ...searchText,
     ]);
-  }, [page, pageSize]);
+  }, [page, pageSize, filterByAvailability, sortByRating]);
 
   useEffect(() => {
     setPage(1);
     setObjectQuery([
       { name: "page", value: 1 },
       { name: "limit", value: pageSize },
+      { name: "availability", value: filterByAvailability },
+      { name: "sort", value: sortByRating },
       ...searchText,
     ]);
   }, [searchText]);
@@ -67,12 +70,30 @@ const FindMealsPage = () => {
       </div>
     );
   }
-  const items: MenuProps["items"] = [
+  const resetSearchAndFilter = () => {
+    setFilterByAvailability("All");
+    setSortByRating("");
+    setSearchText([]);
+    setPage(1);
+  }
+  const filterItems: MenuProps["items"] = [
     {
       key: "1",
       label: (
         <button
-          onClick={() => setFilterBy("All")}
+          onClick={() => setFilterByAvailability("All")}
+          rel="noopener noreferrer"
+          className="text-gray-500 w-full text-start"
+        >
+          All
+        </button>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <button
+          onClick={() => setFilterByAvailability("Available")}
           rel="noopener noreferrer"
           className="text-primary w-full text-start"
         >
@@ -81,14 +102,40 @@ const FindMealsPage = () => {
       ),
     },
     {
-      key: "2",
+      key: "3",
       label: (
         <button
-          onClick={() => setFilterBy("In Progress")}
+          onClick={() => setFilterByAvailability("Not Available")}
           rel="noopener noreferrer"
           className="text-red-500 w-full text-start"
         >
           Not Available
+        </button>
+      ),
+    },
+  ];
+  const sortByRatingItems: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <button
+          onClick={() => setSortByRating("l2h")}
+          rel="noopener noreferrer"
+          className="text-gray-500 w-full text-start"
+        >
+          Low to high
+        </button>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <button
+          onClick={() => setSortByRating("h2l")}
+          rel="noopener noreferrer"
+          className="text-gray-500 w-full text-start"
+        >
+          High to low
         </button>
       ),
     },
@@ -98,28 +145,45 @@ const FindMealsPage = () => {
       {/* search and filter  */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-5">
         {/* search bar */}
-        <div>
+        <div className="w-full md:basis-2/5">
           <Search
-            placeholder="input search text"
+            placeholder="Search Meal"
             allowClear
             enterButton="Search"
             size="large"
             onSearch={onSearch}
           />
         </div>
-        <div>
+        <div className="flex flex-wrap items-center gap-5">
           <Dropdown
-            menu={{ items }}
+            menu={{ items: filterItems }}
             trigger={["click"]}
             placement="bottom"
             arrow
           >
-            <button
-              className="bg-gray-100 border border-gray-300 py-2 px-4 rounded-lg"
-            >
-              {filterBy ? filterBy : "Filter By"}
+            <button className="flex items-center gap-1 bg-gray-100 border border-gray-300 py-2 px-4 rounded-lg">
+              Filter By
+              <span>
+                <ChevronDown />
+              </span>
             </button>
           </Dropdown>
+          <Dropdown
+            menu={{ items: sortByRatingItems }}
+            trigger={["click"]}
+            placement="bottom"
+            arrow
+          >
+            <button className="flex items-center gap-1 bg-gray-100 border border-gray-300 py-2 px-4 rounded-lg">
+              Sort by rating
+              <span>
+                <ChevronDown />
+              </span>
+            </button>
+          </Dropdown>
+          <button onClick={resetSearchAndFilter} className="bg-gray-100 hover:bg-gray-300 transition-all duration-300 p-2 rounded-lg">
+            <RotateCcw />
+          </button>
         </div>
         {/* filter options */}
       </div>
