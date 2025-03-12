@@ -1,9 +1,12 @@
+"use client";
 import type React from "react";
 import Image from "next/image";
 import { IMeal } from "@/types";
 import { BsStarFill } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 
 export const MealCard = ({ meal }: { meal: IMeal }) => {
+  const router = useRouter();
   const {
     name,
     description,
@@ -77,6 +80,7 @@ export const MealCard = ({ meal }: { meal: IMeal }) => {
 
         {/* Action button */}
         <button
+          onClick={() => router.push(`/order-meal?mealId=${meal?._id}`)}
           disabled={!availability}
           className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
             availability

@@ -9,6 +9,7 @@ interface ButtonProps {
   customBg?: string;
   customPY?: string;
   type?: "button" | "submit" | "reset";
+  isDisabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,9 +20,11 @@ const Button: React.FC<ButtonProps> = ({
   customBg,
   customPY,
   type = "button",
+  isDisabled = false,
 }) => {
   return (
     <button
+      disabled={isDisabled}
       type={type}
       onClick={onClick}
       style={{
