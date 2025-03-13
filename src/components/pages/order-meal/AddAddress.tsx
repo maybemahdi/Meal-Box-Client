@@ -8,8 +8,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 // import { useRouter } from 'next/navigation';
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { z } from "zod";
+import {
+  useCreateAddressMutation,
+  useGetMyAddressQuery,
+  useUpdateAddressMutation,
+} from "@/redux/features/address/address.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import Loading from "@/components/shared/Loading/Loading";
 
 const validationSchema = z.object({
   zipCode: z.string().min(1, "Zip code is required"),
@@ -25,6 +32,24 @@ const AddAddress = ({
 }) => {
   const [pickupDate, setPickupDate] = useState<string>("");
   const [emptyDateError, setEmptyDateError] = useState("");
+
+  const [createAddress] = useCreateAddressMutation();
+  const [updateAddress] = useUpdateAddressMutation();
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetMyAddressQuery(undefined);
+
+  useEffect(() => {
+    localStorage.setItem("pickupDate", pickupDate);
+  }, [pickupDate]);
+
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
+
+  const myAddress = response?.data;
 
   const handleDateChange = (date: dayjs.Dayjs | null) => {
     if (date) {
@@ -42,19 +67,25 @@ const AddAddress = ({
     }
     const payload = {
       ...formData,
-      pickupDate: pickupDate,
     };
-    console.log(payload);
-    console.log(reset);
-    setCurrentStep((prev) => prev + 1);
 
-    // const response = await handleAsyncWithToast(async () => {
-    //   return addAddress(formData);
-    // }, 'Adding Address...');
-    // if (response?.data?.success) {
-    //   reset();
-    //   router.push('/');
-    // }
+    if (!myAddress?._id) {
+      const response = await handleAsyncWithToast(async () => {
+        return createAddress(payload);
+      }, "Adding Address...");
+      if (response?.data?.success) {
+        setCurrentStep((prev) => prev + 1);
+        reset();
+      }
+    } else {
+      const response = await handleAsyncWithToast(async () => {
+        return updateAddress(payload);
+      }, "Updating Address...");
+      if (response?.data?.success) {
+        setCurrentStep((prev) => prev + 1);
+        reset();
+      }
+    }
   };
 
   return (
@@ -87,7 +118,7 @@ const AddAddress = ({
               />
             </svg>
           </div>
-          <h2 className="uppercase text-xl md:text-[32px] font-semibold text-primary">
+          <h2 className="text-xl md:text-[32px] font-semibold text-primary">
             Pick up Address
           </h2>
         </div>
@@ -97,10 +128,22 @@ const AddAddress = ({
           className="space-y-3"
         >
           <div className="space-y-5">
-            <MyFormInput name="zipCode" label="Zip Code" />
-            <MyFormInput name="pickupStreet" label="Pickup Street" />
-            <MyFormInput name="houseNo" label="House No" />
-            <MyFormInput name="city" label="City" />
+            <MyFormInput
+              value={myAddress?.zipCode}
+              name="zipCode"
+              label="Zip Code"
+            />
+            <MyFormInput
+              value={myAddress?.pickupStreet}
+              name="pickupStreet"
+              label="Pickup Street"
+            />
+            <MyFormInput
+              value={myAddress?.houseNo}
+              name="houseNo"
+              label="House No"
+            />
+            <MyFormInput value={myAddress?.city} name="city" label="City" />
             <div className="w-full space-y-2">
               <label className="ps-1 text-text-secondary text-base font-normal leading-6">
                 Click To Select Your Pickup Date
@@ -115,7 +158,7 @@ const AddAddress = ({
                 }}
                 onChange={handleDateChange}
                 disabledDate={(current) =>
-                  current && current < dayjs().endOf("day")
+                  current && current < dayjs().startOf("day")
                 }
               />
               {emptyDateError && (
@@ -123,7 +166,11 @@ const AddAddress = ({
               )}
             </div>
           </div>
-          <Button label="Save Address" type="submit" fullWidth />
+          <Button
+            label={myAddress ? "Update Address" : "Save Address"}
+            type="submit"
+            fullWidth
+          />
         </MyFormWrapper>
       </div>
     </div>
