@@ -72,7 +72,7 @@ const StripeCardForm = ({
         <label className="block font-semibold mb-2">Cardholder Name</label>
         <input
           type="text"
-          value={cardHolderName}
+          defaultValue={cardHolderName}
           // defaultValue={"Mahdi Hasan"}
           onChange={(e) => setCardHolderName(e.target.value)}
           className="w-full border py-1 px-2 rounded-md"

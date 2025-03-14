@@ -56,6 +56,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
           title: "Session Expired",
           text: "Please login again to continue",
         });
+        window.location.href = "/login";
         return result;
       }
 
@@ -94,7 +95,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: "Stay Logged Out",
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }).then((result) => {
           api.dispatch(logout());
           signOut();

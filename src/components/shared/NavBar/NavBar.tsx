@@ -13,6 +13,7 @@ import { logout, selectCurrentToken } from "@/redux/features/auth/authSlice";
 import { verifyToken } from "@/utils/verifyToken";
 import { JwtPayload } from "jwt-decode";
 import Swal from "sweetalert2";
+import { Dropdown, MenuProps } from "antd";
 
 interface DecodedUser extends JwtPayload {
   role: string;
@@ -46,6 +47,39 @@ const NavBar = () => {
     });
   };
 
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <Link
+          rel="noopener noreferrer"
+          href={
+            (currentUser as DecodedUser)?.role === "CUSTOMER"
+              ? "/dashboard/customer"
+              : "/dashboard/provider"
+          }
+        >
+          Dashboard
+        </Link>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Link
+          rel="noopener noreferrer"
+          href={
+            (currentUser as DecodedUser)?.role === "CUSTOMER"
+              ? "/profile/customer"
+              : "/profile/provider"
+          }
+        >
+          Profile
+        </Link>
+      ),
+    },
+  ];
+
   return (
     <div className="bg-white shadow-md sticky top-0 z-[1000]">
       <div className="flex justify-between items-center w-[90%] mx-auto md:py-1">
@@ -76,8 +110,8 @@ const NavBar = () => {
 
         {/* Action Buttons */}
         {currentUser ? (
-          <div className="hidden lg:flex gap-5">
-            <Button
+          <div className="hidden lg:flex gap-3">
+            {/* <Button
               onClick={() =>
                 router.push(
                   `/dashboard/${(
@@ -87,7 +121,63 @@ const NavBar = () => {
               }
               label="Dashboard"
               variant="outline"
-            />
+            /> */}
+            <Dropdown menu={{ items }} trigger={["click"]} placement="bottom" arrow>
+              <button className="flex items-center bg-slate-100 hover:bg-slate-200 transition-all duration-300 px-3 py-2 rounded-md">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  viewBox="0 0 25 25"
+                  fill="none"
+                >
+                  <g clipPath="url(#clip0_887_1316)">
+                    <path
+                      d="M12.1001 0.0742188C8.61077 0.0742188 5.77197 2.91302 5.77197 6.40234C5.77197 9.89167 8.61077 12.7305 12.1001 12.7305C15.5894 12.7305 18.4282 9.89167 18.4282 6.40234C18.4282 2.91302 15.5894 0.0742188 12.1001 0.0742188Z"
+                      fill="#4D4D4D"
+                    />
+                    <path
+                      d="M19.9735 16.8646C18.241 15.1055 15.9443 14.1367 13.5063 14.1367H10.6938C8.25597 14.1367 5.95919 15.1055 4.22669 16.8646C2.50268 18.6151 1.55322 20.9258 1.55322 23.3711C1.55322 23.7594 1.86804 24.0742 2.25635 24.0742H21.9438C22.3322 24.0742 22.647 23.7594 22.647 23.3711C22.647 20.9258 21.6975 18.6151 19.9735 16.8646Z"
+                      fill="#4D4D4D"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_887_1316">
+                      <rect
+                        width="24"
+                        height="24"
+                        fill="white"
+                        transform="translate(0.100098 0.0742188)"
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  viewBox="0 0 25 25"
+                  fill="none"
+                >
+                  <path
+                    d="M20.6001 8.07422C21.4285 8.07422 22.1001 7.40265 22.1001 6.57422C22.1001 5.74579 21.4285 5.07422 20.6001 5.07422C19.7717 5.07422 19.1001 5.74579 19.1001 6.57422C19.1001 7.40265 19.7717 8.07422 20.6001 8.07422Z"
+                    fill="#4D4D4D"
+                  />
+                  <path
+                    d="M16.6001 8.07422H3.6001C2.772 8.07422 2.1001 7.40232 2.1001 6.57422C2.1001 5.74612 2.772 5.07422 3.6001 5.07422H16.6001C17.4282 5.07422 18.1001 5.74612 18.1001 6.57422C18.1001 7.40232 17.4282 8.07422 16.6001 8.07422Z"
+                    fill="#4D4D4D"
+                  />
+                  <path
+                    d="M16.6001 14.0742H3.6001C2.772 14.0742 2.1001 13.4023 2.1001 12.5742C2.1001 11.7461 2.772 11.0742 3.6001 11.0742H16.6001C17.4282 11.0742 18.1001 11.7461 18.1001 12.5742C18.1001 13.4023 17.4282 14.0742 16.6001 14.0742Z"
+                    fill="#4D4D4D"
+                  />
+                  <path
+                    d="M10.6001 20.0742H3.6001C2.772 20.0742 2.1001 19.4023 2.1001 18.5742C2.1001 17.7461 2.772 17.0742 3.6001 17.0742H10.6001C11.4282 17.0742 12.1001 17.7461 12.1001 18.5742C12.1001 19.4023 11.4282 20.0742 10.6001 20.0742Z"
+                    fill="#4D4D4D"
+                  />
+                </svg>
+              </button>
+            </Dropdown>
             <button
               onClick={handleLogOut}
               className="bg-slate-100 hover:bg-slate-200 transition-all duration-300 px-3 py-2 rounded-md text-gray-500"
@@ -164,7 +254,7 @@ const NavBar = () => {
 
           {/* Mobile Action Buttons */}
           {currentUser ? (
-            <div className="lg:hidden flex flex-col gap-5 mt-5">
+            <div className="lg:hidden flex flex-col gap-3 mt-5">
               <Button
                 onClick={() =>
                   router.push(
@@ -174,6 +264,18 @@ const NavBar = () => {
                   )
                 }
                 label="Dashboard"
+                variant="outline"
+                fullWidth
+              />
+              <Button
+                onClick={() =>
+                  router.push(
+                    (currentUser as DecodedUser)?.role === "CUSTOMER"
+                      ? "/profile/customer"
+                      : "/profile/provider"
+                  )
+                }
+                label="Profile"
                 variant="outline"
                 fullWidth
               />

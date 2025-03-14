@@ -9,29 +9,29 @@ import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import Button from "@/components/shared/Button/Button";
 import Loading from "@/components/shared/Loading/Loading";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
-import { useUpdateCustomerProfileMutation } from "@/redux/features/profile/profile.customer.api";
+import { useUpdateProviderProfileMutation } from "@/redux/features/profile/profile.provider";
 
-const updateCustomerProfileSchema = z.object({
+const updateProviderProfileSchema = z.object({
   name: z.string().optional(),
   phoneNumber: z.string().optional(),
   dietaryPreferences: z.array(z.string()).optional(), // Optional array of strings
 });
 
-type UpdateCustomerProfile = z.infer<typeof updateCustomerProfileSchema>;
+type UpdateProviderProfile = z.infer<typeof updateProviderProfileSchema>;
 
-export default function CustomerProfilePage() {
+export default function ProviderProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [dietaryPreferences, setDietaryPreferences] = useState<string[]>([]);
+  const [cuisinePreferences, setCuisinePreferences] = useState<string[]>([]);
 
-  const [updateCustomerProfile] = useUpdateCustomerProfileMutation();
+  const [updateProviderProfile] = useUpdateProviderProfileMutation();
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<UpdateCustomerProfile>({
-    resolver: zodResolver(updateCustomerProfileSchema),
+  } = useForm<UpdateProviderProfile>({
+    resolver: zodResolver(updateProviderProfileSchema),
   });
 
   const {
@@ -44,37 +44,36 @@ export default function CustomerProfilePage() {
     return <Loading />;
   }
 
-  const customer = me?.data;
+  const provider = me?.data;
 
-  const dietaryOptions = [
-    "Vegetarian",
-    "Vegan",
-    "Gluten-Free",
-    "Dairy-Free",
-    "Nut-Free",
-    "Kosher",
-    "Halal",
+  const cuisineSpecialties = [
+    "Italian",
+    "Mexican",
+    "Indian",
+    "Chinese",
+    "Japanese",
+    "Mediterranean",
   ];
 
-  const handleDietaryChange = (preference: string) => {
-    const updatedDietaryPreferences = [...dietaryPreferences];
-    const index = updatedDietaryPreferences.indexOf(preference);
+  const handleCuisinePreferencesChange = (preference: string) => {
+    const updatedCuisinePreferences = [...cuisinePreferences];
+    const index = updatedCuisinePreferences.indexOf(preference);
     if (index === -1) {
-      updatedDietaryPreferences.push(preference);
+      updatedCuisinePreferences.push(preference);
     } else {
-      updatedDietaryPreferences.splice(index, 1);
+      updatedCuisinePreferences.splice(index, 1);
     }
-    setDietaryPreferences(updatedDietaryPreferences);
+    setCuisinePreferences(updatedCuisinePreferences);
   };
 
-  const onSubmit = async (data: UpdateCustomerProfile) => {
+  const onSubmit = async (data: UpdateProviderProfile) => {
     setIsSubmitting(true);
     const payload = {
       ...data,
-      dietaryPreferences,
+      cuisineSpecialties: cuisinePreferences,
     };
     const res = await handleAsyncWithToast(async () => {
-      return updateCustomerProfile(payload);
+      return updateProviderProfile(payload);
     }, "Updating...");
     if (res?.data?.success) {
       setIsSubmitting(false);
@@ -89,7 +88,7 @@ export default function CustomerProfilePage() {
         <div className="md:flex">
           <div className="p-8 w-full">
             <div className="uppercase tracking-wide text-sm text-primary font-semibold mb-1">
-              Customer Profile
+              Provider Profile
             </div>
             <h1 className="block mt-1 text-lg leading-tight font-medium text-black">
               Update Your Details
@@ -104,14 +103,14 @@ export default function CustomerProfilePage() {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Name
+                  Business Name
                 </label>
                 <input
                   type="text"
                   id="name"
                   required
                   {...register("name")}
-                  defaultValue={customer.name}
+                  defaultValue={provider.name}
                   className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
                 />
               </div>
@@ -127,7 +126,7 @@ export default function CustomerProfilePage() {
                   type="email"
                   id="email"
                   disabled
-                  defaultValue={customer.email}
+                  defaultValue={provider.email}
                   className="mt-1 block w-full px-3 py-2 disabled:cursor-not-allowed disabled:bg-gray-200 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
                 />
               </div>
@@ -147,34 +146,34 @@ export default function CustomerProfilePage() {
                     type="tel"
                     id="phoneNumber"
                     {...register("phoneNumber")}
-                    defaultValue={customer.phoneNumber}
+                    defaultValue={provider.phoneNumber}
                     className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
                   />
                 </div>
               </div>
               <div>
                 <span className="block text-sm font-medium text-gray-700 mb-2">
-                  Dietary Preferences (current:{" "}
+                  Cuisine Specialties (current:{" "}
                   <span>
-                    {Array.isArray(customer?.dietaryPreferences) &&
-                    customer.dietaryPreferences.length > 0
-                      ? customer.dietaryPreferences.join(", ")
+                    {Array.isArray(provider?.cuisineSpecialties) &&
+                    provider.cuisineSpecialties.length > 0
+                      ? provider.cuisineSpecialties.join(", ")
                       : "N/A"}
                   </span>
                   )
                 </span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {dietaryOptions.map((option) => (
+                  {cuisineSpecialties.map((option) => (
                     <div key={option} className="flex items-center">
                       <input
                         id={`diet-${option}`}
                         name="dietaryPreferences"
                         type="checkbox"
                         checked={
-                          dietaryPreferences.includes(option) ||
-                          customer?.dietaryPreferences?.includes(option)
+                          cuisinePreferences.includes(option) ||
+                          provider?.cuisineSpecialties?.includes(option)
                         }
-                        onChange={() => handleDietaryChange(option)}
+                        onChange={() => handleCuisinePreferencesChange(option)}
                         className="h-4 w-4 accent-primary text-primary focus:ring-primary border-gray-300 rounded"
                       />
                       <label

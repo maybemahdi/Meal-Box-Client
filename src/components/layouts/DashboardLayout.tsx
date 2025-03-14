@@ -22,6 +22,8 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "@/assets/images/logo.png";
 
 const DashboardLayout = ({
   children,
@@ -109,7 +111,14 @@ const DashboardLayout = ({
         }`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          <span className="text-xl font-semibold text-gray-800">Dashboard</span>
+          {/* Logo */}
+          <div
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center cursor-pointer"
+          >
+            <Image src={logo} alt="Logo" height={70} width={70} />
+            <p className="text-lg font-semibold mt-3">MealBox</p>
+          </div>
           <button
             onClick={() => setSidebarOpen(false)}
             className="p-2 rounded-md lg:hidden hover:bg-gray-100"
