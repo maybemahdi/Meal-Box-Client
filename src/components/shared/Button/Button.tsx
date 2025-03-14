@@ -36,7 +36,7 @@ const Button: React.FC<ButtonProps> = ({
       className={cn(
         "px-8 py-2 rounded-md text-base font-medium transition-all duration-300",
         {
-          "border-2 border-primary text-primary hover:bg-primary hover:text-white":
+          "px-[calc(2rem-1.7px)] py-[calc(0.5rem-1.7px)] border-2 border-primary text-primary hover:bg-primary hover:text-white":
             variant === "outline",
           "bg-primary text-white hover:bg-emerald-700": variant === "filled",
           "w-full": fullWidth,

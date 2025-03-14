@@ -4,8 +4,15 @@ import Image from "next/image";
 import { IMeal } from "@/types";
 import { BsStarFill } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import Button from "@/components/shared/Button/Button";
 
-export const MealCard = ({ meal }: { meal: IMeal }) => {
+export const MealCard = ({
+  meal,
+  isProvider = false,
+}: {
+  meal: IMeal;
+  isProvider?: boolean;
+}) => {
   const router = useRouter();
   const {
     name,
@@ -79,17 +86,24 @@ export const MealCard = ({ meal }: { meal: IMeal }) => {
         </div>
 
         {/* Action button */}
-        <button
-          onClick={() => router.push(`/order-meal?mealId=${meal?._id}`)}
-          disabled={!availability}
-          className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
-            availability
-              ? "bg-primary text-white hover:bg-emerald-700"
-              : "bg-gray-200 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          {availability ? "Order Now" : "Not Available"}
-        </button>
+        {!isProvider ? (
+          <button
+            onClick={() => router.push(`/order-meal?mealId=${meal?._id}`)}
+            disabled={!availability}
+            className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
+              availability
+                ? "bg-primary text-white hover:bg-emerald-700"
+                : "bg-gray-200 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {availability ? "Order Now" : "Not Available"}
+          </button>
+        ) : (
+          <div className="flex items-center justify-between gap-3">
+            <Button label="Edit" fullWidth />
+            <Button label="Delete" variant="outline" fullWidth />
+          </div>
+        )}
       </div>
     </div>
   );

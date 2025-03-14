@@ -15,6 +15,7 @@ import {
   Car,
   UtensilsCrossed,
   UserPen,
+  Utensils,
 } from "lucide-react";
 import { toast } from "sonner";
 import { IoAdd } from "react-icons/io5";
@@ -66,19 +67,24 @@ const DashboardLayout = ({
     menuItems = [
       { icon: Home, text: "Dashboard", path: "/dashboard/customer" },
       {
+        icon: Utensils,
+        text: "Manage Menu",
+        path: "/dashboard/provider/manage-menu",
+      },
+      {
         icon: BarChart3,
         text: "Track Orders",
-        path: "/dashboard/customer/my-orders",
+        path: "/dashboard/provider/my-orders",
       },
       {
         icon: UtensilsCrossed,
         text: "Manage Meals",
-        path: "/dashboard/customer/manage-meals",
+        path: "/dashboard/provider/manage-meals",
       },
       {
         icon: UserPen,
         text: "Profile",
-        path: "/dashboard/customer/profile",
+        path: "/dashboard/provider/profile",
       },
     ];
   }
