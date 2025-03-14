@@ -25,7 +25,7 @@ import Link from "next/link";
 import AddAddress from "./AddAddress";
 import { useGetMyAddressQuery } from "@/redux/features/address/address.api";
 import { useGetSingleMealQuery } from "@/redux/features/meal/meal.customer.api";
-import { useMakePaymentMutation } from "@/redux/features/payment/payment.api";
+import { useCreateOrderMutation } from "@/redux/features/payment/payment.api";
 
 const { Title, Text } = Typography;
 
@@ -49,9 +49,13 @@ const OrderMealPage = () => {
   } = useGetSingleMealQuery(mealId, {
     skip: !mealId,
   });
-  const { data: me, isLoading: isMeLoading } = useGetMeQuery(undefined);
+  const {
+    data: me,
+    isLoading: isMeLoading,
+    isFetching: isMeFetching,
+  } = useGetMeQuery(undefined);
 
-  const [makePayment] = useMakePaymentMutation();
+  const [createOrder] = useCreateOrderMutation();
 
   if (!mealId) {
     router.push("/shop");
@@ -62,14 +66,14 @@ const OrderMealPage = () => {
     isFetching ||
     isSingleMealLoading ||
     isSingleMealFetching ||
-    isMeLoading
+    isMeLoading ||
+    isMeFetching
   ) {
     return <Loading />;
   }
 
   const myAddress = response?.data;
   const currentMeal = responseOfSingleMeal?.data;
-  console.log(currentMeal);
 
   const handleContinue = () => {
     setCurrentStep((prev) => prev + 1);
@@ -95,11 +99,10 @@ const OrderMealPage = () => {
   const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
   const handleNextStep = async (paymentMethodId: string) => {
-    console.log(paymentMethodId);
-    setCurrentStep((prev) => prev + 1);
     const res = await handleAsyncWithToast(async () => {
-      return makePayment({
-        customerId: me?._id,
+      return createOrder({
+        paymentMethodId: paymentMethodId,
+        customerId: me?.data?._id,
         mealId: mealId,
         customization: "Extra spicy, no dairy",
         schedule: pickupDate,
@@ -108,6 +111,7 @@ const OrderMealPage = () => {
     }, "Ordering...");
     if (res?.data?.success) {
       setCurrentStep((prev) => prev + 1);
+      localStorage.removeItem("pickupDate");
       console.log(res?.data);
     }
   };
@@ -322,9 +326,6 @@ const OrderMealPage = () => {
             <p className="text-lg text-text-secondary max-w-md mb-4">
               Your order has been confirmed and is now being processed. Thank
               you for staying with us!
-            </p>
-            <p className="text-[#616161] font-semibold text-base mb-4">
-              Order ID #3884885
             </p>
             <Link href={"/"}>
               <Button label="Go to Home" variant="outline" />

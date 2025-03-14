@@ -28,7 +28,7 @@ const paymentApi = baseApi.injectEndpoints({
       providesTags: ["order"],
     }),
 
-    makePayment: builder.mutation({
+    createOrder: builder.mutation({
       query: (data) => {
         return {
           url: "/order",
@@ -44,5 +44,5 @@ const paymentApi = baseApi.injectEndpoints({
 export const {
   useGetAllPaymentQuery,
   useGetSinglePaymentQuery,
-  useMakePaymentMutation,
+  useCreateOrderMutation,
 } = paymentApi;
