@@ -30,12 +30,12 @@ const MyFormSelect = ({
     <Controller
       name={name}
       render={({ field, fieldState: { error } }) => (
-        <div className="flex flex-col justify-center gap-1 w-full">
+        <div className="flex flex-col justify-center w-full">
           {/* Label */}
           {label && (
             <p
               className={cn(
-                "ps-1 mb-2 text-[#101828] text-base font-normal leading-6",
+                "mb-2 text-text-secondary text-base font-normal leading-6",
                 labelClassName
               )}
             >

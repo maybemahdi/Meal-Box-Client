@@ -37,7 +37,7 @@ const MyFormTextArea = ({
         }}
         render={({ field, fieldState: { error } }) => (
           <div className="flex flex-col justify-center gap-2 w-full">
-            <p className={cn("ps-1 text-[#101828] dark:text-white text-base font-normal leading-6", labelClassName)}>
+            <p className={cn("text-text-secondary text-base font-normal leading-6", labelClassName)}>
               {label}
             </p>
             <Form.Item style={{ marginBottom: "0px" }}>
@@ -46,7 +46,7 @@ const MyFormTextArea = ({
                 id={name}
                 size="large"
                 rows={4}
-                className={cn("w-full dark:bg-gray-300", inputClassName)}
+                className={cn("w-full", inputClassName)}
                 placeholder={placeHolder}
               />
             </Form.Item>

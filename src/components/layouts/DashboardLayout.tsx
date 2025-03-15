@@ -65,7 +65,7 @@ const DashboardLayout = ({
   }
   if (role === "PROVIDER") {
     menuItems = [
-      { icon: Home, text: "Dashboard", path: "/dashboard/customer" },
+      { icon: Home, text: "Dashboard", path: "/dashboard/provider" },
       {
         icon: Utensils,
         text: "Manage Menu",
@@ -75,11 +75,6 @@ const DashboardLayout = ({
         icon: BarChart3,
         text: "Track Orders",
         path: "/dashboard/provider/my-orders",
-      },
-      {
-        icon: UtensilsCrossed,
-        text: "Manage Meals",
-        path: "/dashboard/provider/manage-meals",
       },
       {
         icon: UserPen,

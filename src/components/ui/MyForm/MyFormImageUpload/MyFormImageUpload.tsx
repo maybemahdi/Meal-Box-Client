@@ -15,6 +15,7 @@ type TImageUploadProps = {
   labelClassName?: string;
   inputClassName?: string;
   previewImageClassName?: string;
+  resetTrigger?: boolean;
   defaultValue?: string | StaticImport;
   [key: string]: any; // Allow other props
 };
@@ -27,12 +28,15 @@ const MyFormImageUpload = ({
   labelClassName = "",
   inputClassName = "",
   previewImageClassName = "",
+  resetTrigger,
   defaultValue,
   children,
   ...rest
 }: TImageUploadProps) => {
   const { control, setValue, resetField } = useFormContext();
-  const [preview, setPreview] = useState<string | StaticImport | null>(defaultValue || null);
+  const [preview, setPreview] = useState<string | StaticImport | null>(
+    defaultValue || null
+  );
   const [fileInputKey, setFileInputKey] = useState(0);
 
   // Handle file change (set preview and form value)
@@ -62,6 +66,13 @@ const MyFormImageUpload = ({
     }
   }, [defaultValue, name, setValue]);
 
+  // Reset image preview when resetTrigger changes
+  useEffect(() => {
+    if (resetTrigger) {
+      handleRemoveImage();
+    }
+  }, [resetTrigger]);
+
   return (
     <div className={cn(`form-group h-full ${size}`, parentClassName)}>
       {label && <p className={cn("mb-2", labelClassName)}>{label}</p>}
@@ -77,7 +88,7 @@ const MyFormImageUpload = ({
                   width={300}
                   src={preview}
                   alt="Preview"
-                  className="h-full w-full rounded-md object-fill"
+                  className="h-full w-full rounded-md object-cover"
                 />
                 <button
                   type="button"

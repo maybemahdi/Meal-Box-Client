@@ -11,6 +11,7 @@ import "@/components/pages/find-meals/findMeal.css";
 import Search, { SearchProps } from "antd/es/input/Search";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { MealCard } from "@/components/pages/find-meals/MealCard";
+import { useRouter } from "next/navigation";
 
 const ManageMenuPage = () => {
   const [filterByAvailability, setFilterByAvailability] = useState("All");
@@ -20,6 +21,7 @@ const ManageMenuPage = () => {
   const [searchText, setSearchText] = useState<{ name: string; value: any }[]>(
     []
   );
+  const router = useRouter();
 
   const handlePaginationChange = (page: number, pageSize: number) => {
     setPage(page);
@@ -145,7 +147,12 @@ const ManageMenuPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">My Menu</h2>
-        <Button label="Add Menu" />
+        <Button
+          label="Add Menu"
+          onClick={() =>
+            router.push("/dashboard/provider/manage-menu/add-menu")
+          }
+        />
       </div>
       {/* Menu List */}
       {/* search and filter  */}
