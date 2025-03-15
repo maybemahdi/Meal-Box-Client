@@ -13,7 +13,17 @@ const providerMealApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["meal"],
     }),
+    updateMeal: builder.mutation({
+      query: ({formData, id}) => {
+        return {
+          url: `/meal/${id}`,
+          method: "PATCH",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["meal"],
+    }),
   }),
 });
 
-export const {useCreateMealMutation} = providerMealApi;
+export const {useCreateMealMutation, useUpdateMealMutation} = providerMealApi;

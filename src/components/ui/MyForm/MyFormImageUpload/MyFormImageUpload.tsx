@@ -17,6 +17,8 @@ type TImageUploadProps = {
   previewImageClassName?: string;
   resetTrigger?: boolean;
   defaultValue?: string | StaticImport;
+  showImage?: boolean;
+  setShowImage?: (showImage: boolean) => void;
   [key: string]: any; // Allow other props
 };
 
@@ -31,6 +33,8 @@ const MyFormImageUpload = ({
   resetTrigger,
   defaultValue,
   children,
+  showImage,
+  setShowImage,
   ...rest
 }: TImageUploadProps) => {
   const { control, setValue, resetField } = useFormContext();
@@ -43,6 +47,7 @@ const MyFormImageUpload = ({
   const handleFileChange = (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
+      if (setShowImage) setShowImage(!showImage);
       setPreview(reader.result as string); // Set preview
     };
     reader.readAsDataURL(file);
@@ -52,6 +57,7 @@ const MyFormImageUpload = ({
 
   // Remove image and reset field
   const handleRemoveImage = () => {
+    if (setShowImage) setShowImage(!showImage);
     setPreview(null); // Clear preview
     resetField(name); // Clear form value
     setFileInputKey((prev) => prev + 1); // Force file input reset

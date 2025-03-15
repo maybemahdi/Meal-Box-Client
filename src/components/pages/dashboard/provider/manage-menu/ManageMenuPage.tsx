@@ -66,13 +66,6 @@ const ManageMenuPage = () => {
     return <Loading />;
   }
   const meals = response?.data?.meals;
-  if (!meals?.length) {
-    return (
-      <div className="w-full mx-auto flex items-center justify-center h-[70vh]">
-        <p className="text-2xl font-semibold text-primary">No meal found</p>
-      </div>
-    );
-  }
   const resetSearchAndFilter = () => {
     setFilterByAvailability("All");
     setSortByRating("");
@@ -204,9 +197,15 @@ const ManageMenuPage = () => {
         {/* filter options */}
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {meals?.map((meal: IMeal) => (
-          <MealCard key={meal?._id} meal={meal} isProvider={true} />
-        ))}
+        {meals?.length ? (
+          meals?.map((meal: IMeal) => (
+            <MealCard key={meal?._id} meal={meal} isProvider={true} />
+          ))
+        ) : (
+          <div className="w-full col-span-4 mx-auto flex items-center justify-center h-[40vh]">
+            <p className="text-2xl font-semibold text-primary">No meal found</p>
+          </div>
+        )}
       </div>
       <div className="p-4 w-full flex justify-center items-center">
         <Pagination

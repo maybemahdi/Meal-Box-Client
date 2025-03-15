@@ -10,6 +10,7 @@ interface MyFormSelectProps {
   options?: SelectProps["options"];
   disabled?: boolean;
   mode?: "multiple" | "tags"; // these are the two modes supported by Ant Design's Select
+  defaultValue?: string;
   placeHolder: string;
   className?: string;
   isSearch?: boolean;
@@ -22,6 +23,7 @@ const MyFormSelect = ({
   options,
   disabled,
   mode,
+  defaultValue,
   placeHolder,
   className,
   isSearch = false,
@@ -54,6 +56,7 @@ const MyFormSelect = ({
               value={field.value}
               onChange={(value) => field.onChange(value)}
               options={options}
+              defaultValue={defaultValue}
               size="large"
               disabled={disabled}
               placeholder={placeHolder}

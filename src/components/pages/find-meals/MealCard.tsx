@@ -57,7 +57,7 @@ export const MealCard = ({
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 xs:h-[50%] md:h-[55%] sm:h-[58%] lg:h-[58%] flex flex-col justify-between">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-xl font-bold text-gray-800">{name}</h3>
           <div className="flex items-center gap-1">
@@ -86,24 +86,34 @@ export const MealCard = ({
         </div>
 
         {/* Action button */}
-        {!isProvider ? (
-          <button
-            onClick={() => router.push(`/order-meal?mealId=${meal?._id}`)}
-            disabled={!availability}
-            className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
-              availability
-                ? "bg-primary text-white hover:bg-emerald-700"
-                : "bg-gray-200 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            {availability ? "Order Now" : "Not Available"}
-          </button>
-        ) : (
-          <div className="flex items-center justify-between gap-3">
-            <Button label="Edit" fullWidth />
-            <Button label="Delete" variant="outline" fullWidth />
-          </div>
-        )}
+        <div>
+          {!isProvider ? (
+            <button
+              onClick={() => router.push(`/order-meal?mealId=${meal?._id}`)}
+              disabled={!availability}
+              className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
+                availability
+                  ? "bg-primary text-white hover:bg-emerald-700"
+                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              {availability ? "Order Now" : "Not Available"}
+            </button>
+          ) : (
+            <div className="flex items-center justify-between gap-3">
+              <Button
+                onClick={() =>
+                  router.push(
+                    `/dashboard/provider/manage-menu/edit-menu?id=${meal?._id}`
+                  )
+                }
+                label="Edit"
+                fullWidth
+              />
+              <Button label="Delete" variant="outline" fullWidth />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

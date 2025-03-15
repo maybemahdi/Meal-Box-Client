@@ -63,19 +63,12 @@ const FindMealsPage = () => {
     return <Loading />;
   }
   const meals = response?.data?.meals;
-  if (!meals?.length) {
-    return (
-      <div className="w-full mx-auto flex items-center justify-center h-[70vh]">
-        <p className="text-2xl font-semibold text-primary">No meal found</p>
-      </div>
-    );
-  }
   const resetSearchAndFilter = () => {
     setFilterByAvailability("All");
     setSortByRating("");
     setSearchText([]);
     setPage(1);
-  }
+  };
   const filterItems: MenuProps["items"] = [
     {
       key: "1",
@@ -181,16 +174,23 @@ const FindMealsPage = () => {
               </span>
             </button>
           </Dropdown>
-          <button onClick={resetSearchAndFilter} className="bg-gray-100 hover:bg-gray-300 transition-all duration-300 p-2 rounded-lg">
+          <button
+            onClick={resetSearchAndFilter}
+            className="bg-gray-100 hover:bg-gray-300 transition-all duration-300 p-2 rounded-lg"
+          >
             <RotateCcw />
           </button>
         </div>
         {/* filter options */}
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {meals?.map((meal: IMeal) => (
-          <MealCard key={meal?._id} meal={meal} />
-        ))}
+        {meals?.length ? (
+          meals?.map((meal: IMeal) => <MealCard key={meal?._id} meal={meal} />)
+        ) : (
+          <div className="w-full col-span-4 mx-auto flex items-center justify-center h-[70vh]">
+            <p className="text-2xl font-semibold text-primary">No meal found</p>
+          </div>
+        )}
       </div>
       <div className="p-4 w-full flex justify-center items-center">
         <Pagination
