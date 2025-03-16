@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "../../api/baseApi";
 
-const contactApi = baseApi.injectEndpoints({
+const reviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllContactMessages: builder.query({
+    getAllReview: builder.query({
       query: (data) => {
         const params = new URLSearchParams();
         if (data) {
@@ -12,44 +12,32 @@ const contactApi = baseApi.injectEndpoints({
           });
         }
         return {
-          url: `/contact`,
+          url: `/review`,
           method: "GET",
           params: params,
         };
       },
-      providesTags: ["example"],
+      providesTags: ["review"],
     }),
-    getSingleContactMessage: builder.query({
+    getSingleReview: builder.query({
       query: (id) => ({
-        url: `/contact/${id}`,
+        url: `/review/${id}`,
         method: "GET",
       }),
-      providesTags: ["contact"],
+      providesTags: ["review"],
     }),
 
-    postContactMessage: builder.mutation({
+    createReview: builder.mutation({
       query: (data) => {
         return {
-          url: "/contact",
+          url: "/review",
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["contact"],
-    }),
-
-    deleteContactMessage: builder.mutation({
-      query: (id) => {
-        return {
-          url: `/contact/${id}`,
-          method: "DELETE",
-        };
-      },
-      invalidatesTags: ["contact"],
+      invalidatesTags: ["review", "meal"],
     }),
   }),
 });
 
-export const {
-  usePostContactMessageMutation,
-} = contactApi;
+export const {useCreateReviewMutation} = reviewApi;

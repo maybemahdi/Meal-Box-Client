@@ -10,6 +10,7 @@ import { Dropdown, MenuProps, Pagination } from "antd";
 import "./findMeal.css";
 import Search, { SearchProps } from "antd/es/input/Search";
 import { ChevronDown, RotateCcw } from "lucide-react";
+import { useGetMeQuery } from "@/redux/features/auth/authApi";
 
 const FindMealsPage = () => {
   const [filterByAvailability, setFilterByAvailability] = useState("All");
@@ -55,11 +56,16 @@ const FindMealsPage = () => {
     isLoading,
     isFetching,
   } = useGetAllMealQuery(objectQuery);
+  const {
+    data: me,
+    isLoading: isMeLoading,
+    isFetching: isMeFetching,
+  } = useGetMeQuery(undefined);
 
   const onSearch: SearchProps["onSearch"] = (value) =>
     setSearchText([{ name: "searchTerm", value: value }]);
 
-  if (isLoading || isFetching) {
+  if (isLoading || isFetching || isMeLoading || isMeFetching) {
     return <Loading />;
   }
   const meals = response?.data?.meals;
@@ -185,7 +191,7 @@ const FindMealsPage = () => {
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {meals?.length ? (
-          meals?.map((meal: IMeal) => <MealCard key={meal?._id} meal={meal} />)
+          meals?.map((meal: IMeal) => <MealCard key={meal?._id} meal={meal} userId={me?.data?._id} />)
         ) : (
           <div className="w-full col-span-4 mx-auto flex items-center justify-center h-[70vh]">
             <p className="text-2xl font-semibold text-primary">No meal found</p>
