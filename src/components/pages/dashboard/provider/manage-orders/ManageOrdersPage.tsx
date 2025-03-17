@@ -23,14 +23,16 @@ const ManageOrdersPage = () => {
     setObjectQuery([
       { name: "page", value: page },
       { name: "limit", value: pageSize },
+      { name: "status", value: filterByStatus },
     ]);
-  }, [page, pageSize]);
+  }, [page, pageSize, filterByStatus]);
 
   useEffect(() => {
     setPage(1);
     setObjectQuery([
       { name: "page", value: 1 },
       { name: "limit", value: pageSize },
+      { name: "status", value: filterByStatus },
       ...searchDate,
     ]);
   }, [searchDate]);
@@ -48,8 +50,9 @@ const ManageOrdersPage = () => {
   };
 
   const resetSearchAndFilter = () => {
-    setSearchDate([]);
     setPage(1);
+    setSearchDate([]);
+    setFilterByStatus("All");
   };
 
   const filterItemsByStatus: MenuProps["items"] = [
@@ -107,7 +110,7 @@ const ManageOrdersPage = () => {
         <button
           onClick={() => setFilterByStatus("CANCELLED")}
           rel="noopener noreferrer"
-          className="text-red-500 w-full text-start"
+          className="text-rose-500 w-full text-start"
         >
           Cancelled
         </button>
@@ -158,7 +161,7 @@ const ManageOrdersPage = () => {
           </button>
         </div>
       </div>
-      <div className="my-6 md:my-8">
+      <div>
         <OrderTable orders={orders} />
       </div>
     </div>

@@ -27,7 +27,19 @@ const orderProviderApi = baseApi.injectEndpoints({
       }),
       providesTags: ["order"],
     }),
+
+    updateOrderStatus: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/order/change-status/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["order"],
+    }),
   }),
 });
 
-export const { useGetOrdersForProviderQuery } = orderProviderApi;
+export const { useGetOrdersForProviderQuery, useUpdateOrderStatusMutation } =
+  orderProviderApi;

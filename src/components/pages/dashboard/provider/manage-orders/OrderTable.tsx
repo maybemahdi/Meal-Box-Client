@@ -1,32 +1,92 @@
-import { Pencil, Trash2 } from "lucide-react";
-import React from "react";
+import { cn } from "@/lib/utils";
+import { useUpdateOrderStatusMutation } from "@/redux/features/order/order.provider.api";
+import { IOrder } from "@/types";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { Dropdown } from "antd";
+import { ChevronDown, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import "./orderDetailsModal.css";
 
-export interface IOrder {
-  _id: string;
-  customerId: string;
-  mealId: string;
-  mealProviderId: string;
-  amount: number;
-  customization?: string;
-  schedule: string; // Using string as MongoDB stores dates in ISO format
-  deliveryAddress: string;
-  status: "PENDING" | "CONFIRMED" | "DELIVERED" | "CANCELLED"; // Enum-like values
-  paymentStatus: "PAID" | "UNPAID" | "REFUNDED";
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-  paymentIntentId?: string;
-}
-
+// Modal Component
+const OrderDetailsModal = ({
+  order,
+  onClose,
+}: {
+  order: IOrder;
+  onClose: () => void;
+}) => {
+  return (
+    <div
+      className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50`}
+    >
+      <div
+        className={`bg-white p-6 rounded-lg w-96 modal ${order ? "open" : ""}`}
+      >
+        <h3 className="text-xl text-primary font-bold mb-5">Order Details</h3>
+        <p>
+          <span className="font-semibold">Order ID:</span> {order._id}
+        </p>
+        <p>
+          <span className="font-semibold">Meal Name:</span>{" "}
+          {order?.mealId?.name}
+        </p>
+        <p>
+          <span className="font-semibold">Amount:</span> ${order?.amount}
+        </p>
+        <p>
+          <span className="font-semibold">Customer Name:</span>{" "}
+          {order?.customerId?.name}
+        </p>
+        <p>
+          <span className="font-semibold">Customer Email:</span>{" "}
+          {order?.customerId?.email}
+        </p>
+        <p>
+          <span className="font-semibold">Customer Dietary Preferences:</span>{" "}
+          {Array.isArray(order?.customerId?.dietaryPreferences) &&
+          order?.customerId?.dietaryPreferences.length > 0
+            ? order?.customerId?.dietaryPreferences.join(", ")
+            : "N/A"}
+        </p>
+        <div className="mt-4 absolute -top-8 -right-4">
+          <button
+            onClick={onClose}
+            className="p-2 bg-primary text-white rounded-full"
+          >
+            <X className="text-white" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const OrderTable = ({ orders }: { orders: IOrder[] }) => {
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
+  const [updateOrderStatus] = useUpdateOrderStatusMutation();
+
+  const updateStatus = async (status: string, id: string) => {
+    await handleAsyncWithToast(async () => {
+      return updateOrderStatus({ data: { status: status }, id: id });
+    }, "Updating...");
+  };
+
+  const handleRowClick = (order: IOrder) => {
+    setSelectedOrder(order); // Set selected order
+  };
+
+  const handleCloseModal = () => {
+    setSelectedOrder(null); // Close the modal
+  };
+
   return (
-    <div className="w-full overflow-x-auto">
-      <table className={`w-full border-collapse`}>
+    <div className="w-full overflow-x-auto border border-gray-300 rounded-lg">
+      <table className={`w-full rounded-lg`}>
         <thead>
-          <tr className="bg-gray-50">
+          <tr className="bg-gray-100">
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
-              ID
+              Order Id
             </th>
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
               Image
@@ -35,16 +95,13 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
               Name
             </th>
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
-              Description
-            </th>
-            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
               Price
             </th>
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
               Availability
             </th>
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
-              Actions
+              Status
             </th>
           </tr>
         </thead>
@@ -53,58 +110,147 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
             orders?.map((item: IOrder, index) => (
               <tr
                 key={index}
+                onClick={() => handleRowClick(item)}
                 className={
                   index % 2 === 0
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-50 cursor-pointer"
+                    ? "bg-gray-50 cursor-pointer"
+                    : "bg-gray-100 cursor-pointer"
                 }
               >
                 <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                   {item._id}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  {/* <div className="w-20 h-16 relative">
+                  <div className="w-20 h-16 relative">
                     <Image
-                      src={item._id || "/placeholder.svg"}
+                      src={item?.mealId?.image}
                       alt={item._id}
                       fill
                       className="object-cover rounded"
                     />
-                  </div> */}
-                  <span>{item._id}</span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  {item._id}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  {item._id}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  ${item.amount}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  {/* <span className="">Available</span> */}
-                  <span>{item._id}</span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  <div className="flex gap-4">
-                    <button className="text-blue-500 hover:text-blue-700">
-                      <Pencil className="w-4 h-4" />
-                    </button>
-                    <button className="text-red-500 hover:text-red-700">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
+                </td>
+
+                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  {item?.mealId?.name}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  ${item?.amount}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <span
+                    className={cn("py-1 px-2 rounded-full text-white text-xs", {
+                      "bg-green-500": item?.mealId?.availability,
+                      "bg-rose-500": !item?.mealId?.availability,
+                    })}
+                  >
+                    {item?.mealId?.availability ? "Available" : "Unavailable"}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <span>
+                    <Dropdown
+                      menu={{
+                        items: [
+                          {
+                            key: "1",
+                            label: (
+                              <button
+                                onClick={() =>
+                                  updateStatus("PENDING", item._id)
+                                }
+                                className="text-yellow-500 w-full text-start"
+                              >
+                                Pending
+                              </button>
+                            ),
+                          },
+                          {
+                            key: "2",
+                            label: (
+                              <button
+                                onClick={() =>
+                                  updateStatus("ACCEPTED", item._id)
+                                }
+                                className="text-blue-500 w-full text-start"
+                              >
+                                Accepted
+                              </button>
+                            ),
+                          },
+                          {
+                            key: "3",
+                            label: (
+                              <button
+                                onClick={() =>
+                                  updateStatus("DELIVERED", item._id)
+                                }
+                                className="text-green-500 w-full text-start"
+                              >
+                                Delivered
+                              </button>
+                            ),
+                          },
+                          {
+                            key: "4",
+                            label: (
+                              <button
+                                onClick={() =>
+                                  updateStatus("CANCELLED", item._id)
+                                }
+                                className="text-rose-500 w-full text-start"
+                              >
+                                Cancelled
+                              </button>
+                            ),
+                          },
+                        ],
+                      }}
+                      trigger={["click"]}
+                      placement="bottom"
+                      arrow
+                    >
+                      <button
+                        className={cn(
+                          "py-1 px-2 flex items-center rounded-full text-white text-xs",
+                          {
+                            "text-yellow-500 bg-yellow-100":
+                              item?.status === "PENDING",
+                            "text-blue-500 bg-blue-100":
+                              item?.status === "ACCEPTED",
+                            "text-green-500 bg-green-100":
+                              item?.status === "DELIVERED",
+                            "text-rose-500 bg-rose-100":
+                              item?.status === "CANCELLED",
+                          }
+                        )}
+                      >
+                        {item?.status}
+                        <span>
+                          <ChevronDown />
+                        </span>
+                      </button>
+                    </Dropdown>
+                  </span>
                 </td>
               </tr>
             ))
           ) : (
-            <p className="text-xl text-dashboard-primary font-semibold mt-5">
-              No Products yet
-            </p>
+            <tr>
+              <td
+                colSpan={6}
+                className="text-center text-xl text-rose-500 font-semibold py-5"
+              >
+                No Order yet
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
+      {/* Modal */}
+      {selectedOrder && (
+        <OrderDetailsModal order={selectedOrder} onClose={handleCloseModal} />
+      )}
     </div>
   );
 };
