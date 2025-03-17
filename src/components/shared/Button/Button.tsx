@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"; // Importing the utility function
 
 interface ButtonProps {
   label: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   variant?: "outline" | "filled";
   fullWidth?: boolean;
   customBg?: string;

@@ -184,7 +184,7 @@ const EditMenu = () => {
             <Button label="Add Meal" type="submit" fullWidth />
           </div>
           <div className="hidden md:flex justify-end">
-            <Button label="Update Meal" type="submit" />
+            <Button label="Update Menu" type="submit" />
           </div>
         </MyFormWrapper>
       </div>

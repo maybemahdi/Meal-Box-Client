@@ -27,10 +27,14 @@ export const MealCard = ({
   meal,
   isProvider = false,
   userId,
+  onEdit,
+  onDelete,
 }: {
   meal: IMeal;
   isProvider?: boolean;
   userId?: string;
+  onEdit?: (e: any) => void;
+  onDelete?: (e: any) => void;
 }) => {
   const [rating, setRating] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -141,7 +145,7 @@ export const MealCard = ({
           <div>
             {!isProvider ? (
               <button
-                onClick={(event) => {
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                   event.stopPropagation();
                   router.push(`/order-meal?mealId=${meal?._id}`);
                 }}
@@ -157,15 +161,16 @@ export const MealCard = ({
             ) : (
               <div className="flex items-center justify-between gap-3">
                 <Button
-                  onClick={() =>
-                    router.push(
-                      `/dashboard/provider/manage-menu/edit-menu?id=${meal?._id}`
-                    )
-                  }
+                  onClick={onEdit}
                   label="Edit"
                   fullWidth
                 />
-                <Button label="Delete" variant="outline" fullWidth />
+                <Button
+                  onClick={onDelete}
+                  label="Delete"
+                  variant="outline"
+                  fullWidth
+                />
               </div>
             )}
           </div>
@@ -283,7 +288,10 @@ export const MealCard = ({
                 className="flex flex-col gap-5 mb-5"
               >
                 <div className="w-full">
-                  <MyFormTextArea name={"comment"} label="Rate the meal" />
+                  <MyFormTextArea
+                    name={"comment"}
+                    placeHolder="Rate the meal"
+                  />
                 </div>
                 <Button label={"Submit"} type="submit" />
               </MyFormWrapper>

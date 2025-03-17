@@ -74,7 +74,7 @@ const DashboardLayout = ({
       {
         icon: BarChart3,
         text: "Track Orders",
-        path: "/dashboard/provider/my-orders",
+        path: "/dashboard/provider/manage-orders",
       },
       {
         icon: UserPen,

@@ -26,10 +26,13 @@ import AddAddress from "./AddAddress";
 import { useGetMyAddressQuery } from "@/redux/features/address/address.api";
 import { useGetSingleMealQuery } from "@/redux/features/meal/meal.customer.api";
 import { useCreateOrderMutation } from "@/redux/features/payment/payment.api";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentToken } from "@/redux/features/auth/authSlice";
 
 const { Title, Text } = Typography;
 
 const OrderMealPage = () => {
+  const userToken = useAppSelector(selectCurrentToken);
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,7 +43,7 @@ const OrderMealPage = () => {
     data: response,
     isLoading,
     isFetching,
-  } = useGetMyAddressQuery(undefined);
+  } = useGetMyAddressQuery(undefined, { skip: !userToken });
 
   const {
     data: responseOfSingleMeal,
@@ -53,12 +56,13 @@ const OrderMealPage = () => {
     data: me,
     isLoading: isMeLoading,
     isFetching: isMeFetching,
-  } = useGetMeQuery(undefined);
+  } = useGetMeQuery(undefined, { skip: !userToken });
 
   const [createOrder] = useCreateOrderMutation();
 
   if (!mealId) {
     router.push("/shop");
+    return;
   }
 
   if (

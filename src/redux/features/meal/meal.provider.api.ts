@@ -14,7 +14,7 @@ const providerMealApi = baseApi.injectEndpoints({
       invalidatesTags: ["meal"],
     }),
     updateMeal: builder.mutation({
-      query: ({formData, id}) => {
+      query: ({ formData, id }) => {
         return {
           url: `/meal/${id}`,
           method: "PATCH",
@@ -23,7 +23,20 @@ const providerMealApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["meal"],
     }),
+    deleteMeal: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/meal/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["meal"],
+    }),
   }),
 });
 
-export const {useCreateMealMutation, useUpdateMealMutation} = providerMealApi;
+export const {
+  useCreateMealMutation,
+  useUpdateMealMutation,
+  useDeleteMealMutation,
+} = providerMealApi;

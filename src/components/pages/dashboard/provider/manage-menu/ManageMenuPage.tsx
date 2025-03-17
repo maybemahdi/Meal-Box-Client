@@ -12,6 +12,9 @@ import Search, { SearchProps } from "antd/es/input/Search";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { MealCard } from "@/components/pages/find-meals/MealCard";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { useDeleteMealMutation } from "@/redux/features/meal/meal.provider.api";
 
 const ManageMenuPage = () => {
   const [filterByAvailability, setFilterByAvailability] = useState("All");
@@ -58,6 +61,8 @@ const ManageMenuPage = () => {
     isLoading,
     isFetching,
   } = useGetAllMealQuery(objectQuery);
+
+  const [deleteMeal] = useDeleteMealMutation();
 
   const onSearch: SearchProps["onSearch"] = (value) =>
     setSearchText([{ name: "searchTerm", value: value }]);
@@ -136,6 +141,32 @@ const ManageMenuPage = () => {
       ),
     },
   ];
+
+  const onDelete = async (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await handleAsyncWithToast(async () => {
+          return deleteMeal(id);
+        }, "Deleting...");
+        if (res?.data?.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your menu has been deleted.",
+            icon: "success",
+          });
+        }
+      }
+    });
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
@@ -199,7 +230,21 @@ const ManageMenuPage = () => {
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {meals?.length ? (
           meals?.map((meal: IMeal) => (
-            <MealCard key={meal?._id} meal={meal} isProvider={true} />
+            <MealCard
+              key={meal?._id}
+              meal={meal}
+              isProvider={true}
+              onEdit={(event: React.MouseEvent<HTMLButtonElement>) => {
+                event.stopPropagation();
+                router.push(
+                  `/dashboard/provider/manage-menu/edit-menu?id=${meal?._id}`
+                );
+              }}
+              onDelete={(event: React.MouseEvent<HTMLButtonElement>) => {
+                event.stopPropagation();
+                onDelete(meal?._id);
+              }}
+            />
           ))
         ) : (
           <div className="w-full col-span-4 mx-auto flex items-center justify-center h-[40vh]">

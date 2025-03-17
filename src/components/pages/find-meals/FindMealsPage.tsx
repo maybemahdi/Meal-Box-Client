@@ -11,8 +11,11 @@ import "./findMeal.css";
 import Search, { SearchProps } from "antd/es/input/Search";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentToken } from "@/redux/features/auth/authSlice";
 
 const FindMealsPage = () => {
+  const userToken = useAppSelector(selectCurrentToken);
   const [filterByAvailability, setFilterByAvailability] = useState("All");
   const [sortByRating, setSortByRating] = useState("");
   const [page, setPage] = useState(1);
@@ -60,7 +63,7 @@ const FindMealsPage = () => {
     data: me,
     isLoading: isMeLoading,
     isFetching: isMeFetching,
-  } = useGetMeQuery(undefined);
+  } = useGetMeQuery(undefined, {skip: !userToken});
 
   const onSearch: SearchProps["onSearch"] = (value) =>
     setSearchText([{ name: "searchTerm", value: value }]);
