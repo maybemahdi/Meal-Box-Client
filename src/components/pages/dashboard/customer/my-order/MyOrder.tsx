@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Loading from "@/components/shared/Loading/Loading";
-import { useGetOrdersForProviderQuery } from "@/redux/features/order/order.provider.api";
 import {
   DatePicker,
   DatePickerProps,
@@ -13,8 +12,9 @@ import {
 import { ChevronDown, RotateCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import OrderTable from "./OrderTable";
+import { useGetOrdersForCustomerQuery } from "@/redux/features/order/order.customer.api";
 
-const ManageOrdersPage = () => {
+const MyOrder = () => {
   const [filterByStatus, setFilterByStatus] = useState("All");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -52,7 +52,7 @@ const ManageOrdersPage = () => {
     data: response,
     isLoading,
     isFetching,
-  } = useGetOrdersForProviderQuery(objectQuery);
+  } = useGetOrdersForCustomerQuery(objectQuery);
 
   const orders = response?.data?.orders;
 
@@ -190,4 +190,4 @@ const ManageOrdersPage = () => {
   );
 };
 
-export default ManageOrdersPage;
+export default MyOrder;

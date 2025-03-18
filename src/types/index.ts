@@ -14,6 +14,21 @@ export interface IUser {
   isDeleted?: boolean;
 }
 
+interface IProvider {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  role: "PROVIDER";
+  dietaryPreferences: string[];
+  cuisineSpecialties: string[];
+  status: "ACTIVE" | "INACTIVE"; // Assuming other possible statuses
+  isDeleted: boolean;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+
+
 export interface IMeal {
   _id: string;
   mealProviderId: string;
@@ -35,7 +50,7 @@ export interface IOrder {
   _id: string;
   customerId: IUser;
   mealId: IMeal;
-  mealProviderId: string;
+  mealProviderId: IProvider;
   amount: number;
   customization?: string;
   schedule: string; // Using string as MongoDB stores dates in ISO format

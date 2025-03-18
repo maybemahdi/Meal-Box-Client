@@ -1,10 +1,10 @@
-import SettingsPage from "@/components/pages/dashboard/settings/SettingsPage";
+import MyOrder from "@/components/pages/dashboard/customer/my-order/MyOrder";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <SettingsPage />
+      <MyOrder />
     </div>
   );
 };

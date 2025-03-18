@@ -35,6 +35,7 @@ const ManageMenuPage = () => {
     { name: string; value: any }[]
   >([]);
 
+
   useEffect(() => {
     setObjectQuery([
       { name: "page", value: page },

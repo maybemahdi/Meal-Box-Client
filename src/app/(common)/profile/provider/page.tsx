@@ -1,5 +1,5 @@
 
-import ProviderProfilePage from '@/components/pages/profile/ProviderProfilePage/ProviderProfilePage';
+import ProviderProfilePage from '@/components/pages/profile/Provider/ProviderProfilePage';
 import React from 'react';
 
 const page = () => {

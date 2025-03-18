@@ -1,9 +1,6 @@
 import { cn } from "@/lib/utils";
-import { useUpdateOrderStatusMutation } from "@/redux/features/order/order.provider.api";
 import { IOrder } from "@/types";
-import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
-import { Dropdown } from "antd";
-import { ChevronDown, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -44,12 +41,12 @@ const OrderDetailsModal = ({
             <span>${order?.amount}</span>
           </div>
           <div className="flex flex-wrap justify-between">
-            <span className="font-semibold">Customer Name:</span>
-            <span>{order?.customerId?.name}</span>
+            <span className="font-semibold">Provider Name:</span>
+            <span>{order?.mealProviderId?.name}</span>
           </div>
           <div className="flex flex-wrap justify-between">
-            <span className="font-semibold">Customer Email:</span>
-            <span>{order?.customerId?.email}</span>
+            <span className="font-semibold">Provider Email:</span>
+            <span>{order?.mealProviderId?.email}</span>
           </div>
           <div className="flex flex-wrap justify-between">
             <span className="font-semibold">Payment Status:</span>
@@ -95,13 +92,6 @@ const OrderDetailsModal = ({
 
 const OrderTable = ({ orders }: { orders: IOrder[] }) => {
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
-  const [updateOrderStatus] = useUpdateOrderStatusMutation();
-
-  const updateStatus = async (status: string, id: string) => {
-    await handleAsyncWithToast(async () => {
-      return updateOrderStatus({ data: { status: status }, id: id });
-    }, "Updating...");
-  };
 
   const handleRowClick = (order: IOrder) => {
     setSelectedOrder(order); // Set selected order
@@ -127,9 +117,6 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
             </th>
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
               Price
-            </th>
-            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
-              Availability
             </th>
             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider border-b">
               Status
@@ -169,104 +156,23 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                   ${item?.amount?.toFixed(2)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  <span
-                    className={cn("py-1 px-2 rounded-full text-white text-xs", {
-                      "bg-green-500": item?.mealId?.availability,
-                      "bg-rose-500": !item?.mealId?.availability,
-                    })}
+                  <button
+                    className={cn(
+                      "py-1 px-2 flex items-center rounded-full text-white text-xs",
+                      {
+                        "text-yellow-500 bg-yellow-100":
+                          item?.status === "PENDING",
+                        "text-blue-500 bg-blue-100":
+                          item?.status === "ACCEPTED",
+                        "text-green-500 bg-green-100":
+                          item?.status === "DELIVERED",
+                        "text-rose-500 bg-rose-100":
+                          item?.status === "CANCELLED",
+                      }
+                    )}
                   >
-                    {item?.mealId?.availability ? "Available" : "Unavailable"}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  <span>
-                    <Dropdown
-                      menu={{
-                        items: [
-                          {
-                            key: "1",
-                            label: (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  updateStatus("PENDING", item._id);
-                                }}
-                                className="text-yellow-500 w-full text-start"
-                              >
-                                Pending
-                              </button>
-                            ),
-                          },
-                          {
-                            key: "2",
-                            label: (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  updateStatus("ACCEPTED", item._id);
-                                }}
-                                className="text-blue-500 w-full text-start"
-                              >
-                                Accepted
-                              </button>
-                            ),
-                          },
-                          {
-                            key: "3",
-                            label: (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  updateStatus("DELIVERED", item._id);
-                                }}
-                                className="text-green-500 w-full text-start"
-                              >
-                                Delivered
-                              </button>
-                            ),
-                          },
-                          {
-                            key: "4",
-                            label: (
-                              <button
-                                onClick={() =>
-                                  updateStatus("CANCELLED", item._id)
-                                }
-                                className="text-rose-500 w-full text-start"
-                              >
-                                Cancelled
-                              </button>
-                            ),
-                          },
-                        ],
-                      }}
-                      trigger={["click"]}
-                      placement="bottom"
-                      arrow
-                    >
-                      <button
-                        onClick={(e) => e.stopPropagation()}
-                        className={cn(
-                          "py-1 px-2 flex items-center rounded-full text-white text-xs",
-                          {
-                            "text-yellow-500 bg-yellow-100":
-                              item?.status === "PENDING",
-                            "text-blue-500 bg-blue-100":
-                              item?.status === "ACCEPTED",
-                            "text-green-500 bg-green-100":
-                              item?.status === "DELIVERED",
-                            "text-rose-500 bg-rose-100":
-                              item?.status === "CANCELLED",
-                          }
-                        )}
-                      >
-                        {item?.status}
-                        <span>
-                          <ChevronDown />
-                        </span>
-                      </button>
-                    </Dropdown>
-                  </span>
+                    {item?.status}
+                  </button>
                 </td>
               </tr>
             ))

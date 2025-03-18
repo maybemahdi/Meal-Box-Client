@@ -47,13 +47,8 @@ const DashboardLayout = ({
       { icon: Home, text: "Dashboard", path: "/dashboard/customer" },
       {
         icon: BarChart3,
-        text: "Track Orders",
-        path: "/dashboard/customer/my-orders",
-      },
-      {
-        icon: Settings,
-        text: "Manage Preferences",
-        path: "/dashboard/customer/preferences",
+        text: "My Order",
+        path: "/dashboard/customer/my-order",
       },
       {
         icon: Settings,
