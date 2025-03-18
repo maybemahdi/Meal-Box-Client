@@ -110,7 +110,7 @@ const OrderMealPage = () => {
         mealId: mealId,
         customization: "Extra spicy, no dairy",
         schedule: pickupDate,
-        deliveryAddress: `${myAddress?.houseNo}, ${myAddress?.pickupStreet}, ${myAddress?.city}, ${myAddress?.zipCode}`,
+        deliveryAddress: `House: ${myAddress?.houseNo}, Street: ${myAddress?.pickupStreet}, Zipcode: ${myAddress?.zipCode}, City: ${myAddress?.city}`,
       });
     }, "Ordering...");
     if (res?.data?.success) {
@@ -194,8 +194,8 @@ const OrderMealPage = () => {
               <h2 className="mb-2 text-base font-medium text-gray-700">
                 Pickup Location
               </h2>
-              <p className="text-primary">
-                {`${myAddress?.houseNo}, ${myAddress?.pickupStreet}, ${myAddress?.zipCode}, ${myAddress?.city}`}
+              <p className="text-primary w-3/4 mx-auto text-center">
+                {`House: ${myAddress?.houseNo}, Street: ${myAddress?.pickupStreet}, City: ${myAddress?.city}`}
               </p>
             </div>
 
@@ -217,7 +217,7 @@ const OrderMealPage = () => {
                 Subtotal
               </h2>
               <p className="text-primary font-semibold">
-                ${currentMeal?.price}
+                ${currentMeal?.price?.toFixed(2)}
               </p>
             </div>
           </div>

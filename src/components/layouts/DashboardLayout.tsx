@@ -18,7 +18,6 @@ import {
   Utensils,
 } from "lucide-react";
 import { toast } from "sonner";
-import { IoAdd } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
@@ -57,9 +56,9 @@ const DashboardLayout = ({
         path: "/dashboard/customer/preferences",
       },
       {
-        icon: UserPen,
-        text: "Profile",
-        path: "/dashboard/customer/profile",
+        icon: Settings,
+        text: "Settings",
+        path: "/dashboard/customer/settings",
       },
     ];
   }
@@ -77,9 +76,9 @@ const DashboardLayout = ({
         path: "/dashboard/provider/manage-orders",
       },
       {
-        icon: UserPen,
-        text: "Profile",
-        path: "/dashboard/provider/profile",
+        icon: Settings,
+        text: "Settings",
+        path: "/dashboard/provider/settings",
       },
     ];
   }

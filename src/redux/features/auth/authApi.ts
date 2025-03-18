@@ -48,6 +48,16 @@ const authApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["user"],
     }),
+    changePassword: builder.mutation({
+      query: (payload) => {
+        return {
+          url: "/auth/change-password",
+          method: "PATCH",
+          body: payload,
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
     updateUser: builder.mutation({
       query: (userInfo) => {
         return {
@@ -91,6 +101,7 @@ export const {
   useLoginWithGoogleMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useChangePasswordMutation,
   useRegisterMutation,
   useUpdateUserMutation,
   useOtpMutation,

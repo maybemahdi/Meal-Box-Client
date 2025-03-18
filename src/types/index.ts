@@ -41,7 +41,7 @@ export interface IOrder {
   schedule: string; // Using string as MongoDB stores dates in ISO format
   deliveryAddress: string;
   status: "PENDING" | "ACCEPTED" | "DELIVERED" | "CANCELLED"; // Enum-like values
-  paymentStatus: "PAID" | "UNPAID" | "REFUNDED";
+  paymentStatus: "PAID" | "PENDING";
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

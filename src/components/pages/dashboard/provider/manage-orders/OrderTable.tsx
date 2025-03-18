@@ -6,7 +6,7 @@ import { Dropdown } from "antd";
 import { ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
-import "./orderDetailsModal.css";
+
 
 // Modal Component
 const OrderDetailsModal = ({
@@ -17,45 +17,71 @@ const OrderDetailsModal = ({
   onClose: () => void;
 }) => {
   return (
-    <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50`}
-    >
-      <div
-        className={`bg-white p-6 rounded-lg w-96 modal ${order ? "open" : ""}`}
-      >
-        <h3 className="text-xl text-primary font-bold mb-5">Order Details</h3>
-        <p>
-          <span className="font-semibold">Order ID:</span> {order._id}
-        </p>
-        <p>
-          <span className="font-semibold">Meal Name:</span>{" "}
-          {order?.mealId?.name}
-        </p>
-        <p>
-          <span className="font-semibold">Amount:</span> ${order?.amount}
-        </p>
-        <p>
-          <span className="font-semibold">Customer Name:</span>{" "}
-          {order?.customerId?.name}
-        </p>
-        <p>
-          <span className="font-semibold">Customer Email:</span>{" "}
-          {order?.customerId?.email}
-        </p>
-        <p>
-          <span className="font-semibold">Customer Dietary Preferences:</span>{" "}
-          {Array.isArray(order?.customerId?.dietaryPreferences) &&
-          order?.customerId?.dietaryPreferences.length > 0
-            ? order?.customerId?.dietaryPreferences.join(", ")
-            : "N/A"}
-        </p>
-        <div className="mt-4 absolute -top-8 -right-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white p-6 rounded-lg w-[90%] max-w-3xl relative">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-bold text-primary">Order Details</h3>
           <button
             onClick={onClose}
             className="p-2 bg-primary text-white rounded-full"
           >
             <X className="text-white" />
           </button>
+        </div>
+
+        {/* Order Information */}
+        <div className="grid grid-cols-1 gap-4 mb-6">
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Meal ID:</span>
+            <span>{order?.mealId?._id}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Meal Name:</span>
+            <span>{order?.mealId?.name}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Amount:</span>
+            <span>${order?.amount}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Customer Name:</span>
+            <span>{order?.customerId?.name}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Customer Email:</span>
+            <span>{order?.customerId?.email}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Payment Status:</span>
+            <span
+              className={cn("px-3 py-1 rounded-full", {
+                "bg-green-100 text-green-500": order?.paymentStatus === "PAID",
+                "bg-yellow-100 text-yellow-500":
+                  order?.paymentStatus === "PENDING",
+              })}
+            >
+              {order?.paymentStatus.charAt(0).toUpperCase() +
+                order?.paymentStatus.slice(1).toLowerCase()}
+            </span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Dietary Preferences:</span>
+            <span>
+              {Array.isArray(order?.customerId?.dietaryPreferences) &&
+              order?.customerId?.dietaryPreferences.length > 0
+                ? order?.customerId?.dietaryPreferences.join(", ")
+                : "N/A"}
+            </span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Shipping Address:</span>
+            <span>{order?.deliveryAddress}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Schedule:</span>
+            <span>{order?.schedule}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -135,7 +161,7 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                   {item?.mealId?.name}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                  ${item?.amount}
+                  ${item?.amount?.toFixed(2)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                   <span
@@ -156,9 +182,10 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                             key: "1",
                             label: (
                               <button
-                                onClick={() =>
-                                  updateStatus("PENDING", item._id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateStatus("PENDING", item._id);
+                                }}
                                 className="text-yellow-500 w-full text-start"
                               >
                                 Pending
@@ -169,9 +196,10 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                             key: "2",
                             label: (
                               <button
-                                onClick={() =>
-                                  updateStatus("ACCEPTED", item._id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateStatus("ACCEPTED", item._id);
+                                }}
                                 className="text-blue-500 w-full text-start"
                               >
                                 Accepted
@@ -182,9 +210,10 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                             key: "3",
                             label: (
                               <button
-                                onClick={() =>
-                                  updateStatus("DELIVERED", item._id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateStatus("DELIVERED", item._id);
+                                }}
                                 className="text-green-500 w-full text-start"
                               >
                                 Delivered
@@ -211,6 +240,7 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                       arrow
                     >
                       <button
+                        onClick={(e) => e.stopPropagation()}
                         className={cn(
                           "py-1 px-2 flex items-center rounded-full text-white text-xs",
                           {

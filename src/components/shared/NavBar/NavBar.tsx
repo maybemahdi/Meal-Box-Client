@@ -55,11 +55,11 @@ const NavBar = () => {
           rel="noopener noreferrer"
           href={
             (currentUser as DecodedUser)?.role === "CUSTOMER"
-              ? "/dashboard/customer"
-              : "/dashboard/provider"
+              ? "/profile/customer"
+              : "/profile/provider"
           }
         >
-          Dashboard
+          Profile
         </Link>
       ),
     },
@@ -70,11 +70,11 @@ const NavBar = () => {
           rel="noopener noreferrer"
           href={
             (currentUser as DecodedUser)?.role === "CUSTOMER"
-              ? "/profile/customer"
-              : "/profile/provider"
+              ? "/dashboard/customer"
+              : "/dashboard/provider"
           }
         >
-          Profile
+          Dashboard
         </Link>
       ),
     },
@@ -111,18 +111,12 @@ const NavBar = () => {
         {/* Action Buttons */}
         {currentUser ? (
           <div className="hidden lg:flex gap-3">
-            {/* <Button
-              onClick={() =>
-                router.push(
-                  `/dashboard/${(
-                    currentUser as DecodedUser
-                  )?.role.toLowerCase()}`
-                )
-              }
-              label="Dashboard"
-              variant="outline"
-            /> */}
-            <Dropdown menu={{ items }} trigger={["click"]} placement="bottom" arrow>
+            <Dropdown
+              menu={{ items }}
+              trigger={["click"]}
+              placement="bottom"
+              arrow
+            >
               <button className="flex items-center bg-slate-100 hover:bg-slate-200 transition-all duration-300 px-3 py-2 rounded-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
