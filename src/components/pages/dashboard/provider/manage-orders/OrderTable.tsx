@@ -40,6 +40,10 @@ const OrderDetailsModal = ({
             <span>{order?.mealId?.name}</span>
           </div>
           <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Customization:</span>
+            <span>{order?.customization}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
             <span className="font-semibold">Amount:</span>
             <span>${order?.amount}</span>
           </div>
@@ -247,7 +251,7 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                       <button
                         onClick={(e) => e.stopPropagation()}
                         className={cn(
-                          "py-1 px-2 flex items-center rounded-full text-white text-xs",
+                          "py-1 px-2 text-gray-500 flex items-center rounded-full text-xs",
                           {
                             "text-yellow-500 bg-yellow-100":
                               item?.status === "PENDING",
@@ -262,7 +266,7 @@ const OrderTable = ({ orders }: { orders: IOrder[] }) => {
                       >
                         {item?.status}
                         <span>
-                          <ChevronDown />
+                          <ChevronDown className="w-4 h-4 ml-1" />
                         </span>
                       </button>
                     </Dropdown>

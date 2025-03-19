@@ -37,6 +37,10 @@ const OrderDetailsModal = ({
             <span>{order?.mealId?.name}</span>
           </div>
           <div className="flex flex-wrap justify-between">
+            <span className="font-semibold">Your Customization:</span>
+            <span>{order?.customization}</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
             <span className="font-semibold">Amount:</span>
             <span>${order?.amount}</span>
           </div>

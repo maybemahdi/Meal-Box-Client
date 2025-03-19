@@ -1,11 +1,12 @@
 import React from 'react';
 import FindMealsPage from '../../../components/pages/find-meals/FindMealsPage';
+import WithAuth from '@/role-wrappers/WithAuth';
 
 const page = () => {
     return (
-        <div>
+        <WithAuth>
             <FindMealsPage />
-        </div>
+        </WithAuth>
     );
 };
 

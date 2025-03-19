@@ -71,7 +71,10 @@ const MyFormInput = ({
                   type={type}
                   id={name}
                   size="large"
-                  className={cn("w-full ", inputClassName)}
+                  className={cn(
+                    "w-full focus:outline-0 focus:ring-0",
+                    inputClassName
+                  )}
                   placeholder={placeHolder}
                 />
               ) : (
@@ -80,7 +83,10 @@ const MyFormInput = ({
                   type={type}
                   id={name}
                   size="large"
-                  className={cn("w-full focus:outline-none", inputClassName)}
+                  className={cn(
+                    "w-full focus:outline-0 focus:ring-0",
+                    inputClassName
+                  )}
                   placeholder={placeHolder}
                 />
               )}

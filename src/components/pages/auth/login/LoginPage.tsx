@@ -64,9 +64,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-96px)] flex items-center justify-center relative">
+    <div className="min-h-[calc(100vh-96px)] flex items-center justify-center relative py-6 md:py-8">
       {/* Login Card */}
-      <div className="bg-[#F2F4F7] rounded-md shadow-lg w-[90%] max-w-[800px] px-4 py-8 md:py-[100px] md:px-20 z-10 relative">
+      <div className="bg-[#F2F4F7] rounded-md border border-gray-300 w-[90%] max-w-[800px] px-4 py-8 md:py-[100px] md:px-20 z-10 relative">
         <h1 className="text-3xl font-bold text-center text-title mb-8 uppercase">
           LOG IN
         </h1>

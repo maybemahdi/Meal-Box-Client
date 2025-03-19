@@ -91,9 +91,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-6px)] flex items-center justify-center relative">
+    <div className="min-h-[calc(100vh-6px)] flex items-center justify-center relative py-6 md:py-8">
       {/* Login Card */}
-      <div className="bg-[#F2F4F7] rounded-md shadow-lg w-[90%] max-w-[800px] p-4 md:py-[48px] md:px-20 z-10 relative">
+      <div className="bg-[#F2F4F7] rounded-md border border-gray-300 w-[90%] max-w-[800px] p-4 md:py-[48px] md:px-20 z-10 relative">
         <h1 className="text-3xl font-bold text-center text-title mb-8 uppercase">
           SIGN UP
         </h1>
@@ -139,7 +139,7 @@ export default function RegisterPage() {
                 placeHolder="Select your account type"
                 options={[
                   { label: "Customer", value: "CUSTOMER" },
-                  { label: "PROVIDER", value: "PROVIDER" },
+                  { label: "Provider", value: "PROVIDER" },
                 ]}
               />
               <MyFormCheckbox

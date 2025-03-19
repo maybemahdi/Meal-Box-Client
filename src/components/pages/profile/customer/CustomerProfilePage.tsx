@@ -290,7 +290,7 @@ export default function CustomerProfilePage() {
               </MyFormWrapper>
             </div>
           </div>
-          <div className="bg-gray-100 border border-gray-300 rounded-lg p-6 shadow-sm">
+          {/* <div className="bg-gray-100 border border-gray-300 rounded-lg p-6 shadow-sm">
             <div className="flex items-center space-x-4">
               <div className="p-2 bg-gray-200 rounded-full">
                 <Package className="w-4 h-4 text-gray-500" />
@@ -315,7 +315,7 @@ export default function CustomerProfilePage() {
                 </h3>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

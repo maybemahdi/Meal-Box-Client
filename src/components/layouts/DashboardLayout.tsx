@@ -12,10 +12,9 @@ import {
   User,
   Users,
   LogOut,
-  Car,
-  UtensilsCrossed,
   UserPen,
   Utensils,
+  ListOrdered,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -24,6 +23,7 @@ import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/images/logo.png";
+import Swal from "sweetalert2";
 
 const DashboardLayout = ({
   children,
@@ -44,9 +44,9 @@ const DashboardLayout = ({
   let menuItems;
   if (role === "CUSTOMER") {
     menuItems = [
-      { icon: Home, text: "Dashboard", path: "/dashboard/customer" },
+      // { icon: Home, text: "Dashboard", path: "/dashboard/customer" },
       {
-        icon: BarChart3,
+        icon: ListOrdered,
         text: "My Order",
         path: "/dashboard/customer/my-order",
       },
@@ -59,7 +59,12 @@ const DashboardLayout = ({
   }
   if (role === "PROVIDER") {
     menuItems = [
-      { icon: Home, text: "Dashboard", path: "/dashboard/provider" },
+      // { icon: Home, text: "Dashboard", path: "/dashboard/provider" },
+      {
+        icon: ListOrdered,
+        text: "My Order",
+        path: "/dashboard/provider/my-order",
+      },
       {
         icon: Utensils,
         text: "Manage Menu",
@@ -97,6 +102,29 @@ const DashboardLayout = ({
       },
     ];
   }
+
+  const handleLogOut = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Log out!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Successful!",
+          text: "Your have been logged out.",
+          icon: "success",
+        });
+        dispatch(logout());
+        router.push("/login");
+      }
+    });
+  };
+
   return (
     <div>
       {/* Sidebar */}
@@ -140,11 +168,7 @@ const DashboardLayout = ({
         {/* log out button  */}
         <div className="p-4 fixed bottom-2 w-full">
           <button
-            onClick={() => {
-              dispatch(logout());
-              toast.success("Log out Successful");
-              router.push("/login");
-            }}
+            onClick={handleLogOut}
             className="flex items-center px-4 py-3 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-50 w-full"
           >
             <LogOut className="w-5 h-5 mr-3" />

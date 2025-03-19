@@ -4,9 +4,7 @@
 import { Steps, Radio } from "antd";
 import Image from "next/image";
 import { CheckOutlined } from "@ant-design/icons";
-import type { RadioChangeEvent } from "antd";
 import { useState } from "react";
-import paypalLogo from "@/assets/images/Paypal.png";
 import mastercard from "@/assets/images/Mastercard.png";
 import visa from "@/assets/images/Visa.png";
 import amex from "@/assets/images/Amex.png";
@@ -19,7 +17,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
 import Loading from "@/components/shared/Loading/Loading";
-import { current } from "@reduxjs/toolkit";
 import Button from "@/components/shared/Button/Button";
 import Link from "next/link";
 import AddAddress from "./AddAddress";
@@ -38,6 +35,7 @@ const OrderMealPage = () => {
   const searchParams = useSearchParams();
   const mealId = searchParams.get("mealId");
   const pickupDate = localStorage.getItem("pickupDate");
+  const customization = localStorage.getItem("customization");
 
   const {
     data: response,
@@ -108,7 +106,7 @@ const OrderMealPage = () => {
         paymentMethodId: paymentMethodId,
         customerId: me?.data?._id,
         mealId: mealId,
-        customization: "Extra spicy, no dairy",
+        customization: customization || "",
         schedule: pickupDate,
         deliveryAddress: `House: ${myAddress?.houseNo}, Street: ${myAddress?.pickupStreet}, Zipcode: ${myAddress?.zipCode}, City: ${myAddress?.city}`,
       });
@@ -116,6 +114,7 @@ const OrderMealPage = () => {
     if (res?.data?.success) {
       setCurrentStep((prev) => prev + 1);
       localStorage.removeItem("pickupDate");
+      localStorage.removeItem("customization");
       console.log(res?.data);
     }
   };
@@ -206,6 +205,12 @@ const OrderMealPage = () => {
               <p className="text-primary">{myAddress?.zipCode}</p>
             </div>
 
+            <div className="text-center">
+              <h2 className="mb-2 text-base font-medium text-gray-700">
+                Customization
+              </h2>
+              <p className="text-primary">{customization}</p>
+            </div>
             <div className="text-center">
               <h2 className="mb-2 text-base font-medium text-gray-700">
                 Your Pickup Date
@@ -331,8 +336,16 @@ const OrderMealPage = () => {
               Your order has been confirmed and is now being processed. Thank
               you for staying with us!
             </p>
-            <Link href={"/"}>
-              <Button label="Go to Home" variant="outline" />
+            <Link
+              href={
+                me?.data?.role === "CUSTOMER"
+                  ? "/dashboard/customer/my-order"
+                  : me?.data?.role === "PROVIDER"
+                  ? "/dashboard/provider/my-order"
+                  : "/dashboard/admin/my-order"
+              }
+            >
+              <Button label="My Order" variant="outline" />
             </Link>
           </div>
         </div>

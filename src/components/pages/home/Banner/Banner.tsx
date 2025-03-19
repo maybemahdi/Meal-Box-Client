@@ -23,7 +23,7 @@ const Banner = () => {
               <Button label="Find Meals" customPY="12px" />
             </Link>
             <Link
-              href="/login"
+              href="/register"
               className="text-black px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition"
             >
               Join as Provider

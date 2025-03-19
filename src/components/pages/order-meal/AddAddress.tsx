@@ -23,6 +23,7 @@ const validationSchema = z.object({
   pickupStreet: z.string().min(1, "Pickup street is required"),
   houseNo: z.string().min(1, "House number is required"),
   city: z.string().min(1, "City is required"),
+  customization: z.string().optional(),
 });
 
 const AddAddress = ({
@@ -64,6 +65,9 @@ const AddAddress = ({
     if (!pickupDate) {
       setEmptyDateError("Please select pickup date");
       return;
+    }
+    if (formData.customization) {
+      localStorage.setItem("customization", formData.customization);
     }
     const payload = {
       ...formData,
@@ -129,6 +133,11 @@ const AddAddress = ({
         >
           <div className="space-y-5">
             <MyFormInput
+              name="customization"
+              label="Meal Customization"
+              placeHolder="Meal Customization (optional)"
+            />
+            <MyFormInput
               value={myAddress?.zipCode}
               name="zipCode"
               label="Zip Code"
@@ -146,7 +155,7 @@ const AddAddress = ({
             <MyFormInput value={myAddress?.city} name="city" label="City" />
             <div className="w-full space-y-2">
               <label className="ps-1 text-text-secondary text-base font-normal leading-6">
-                Click To Select Your Pickup Date
+                Click To Select Your receive Date
               </label>
               <DatePicker
                 style={{

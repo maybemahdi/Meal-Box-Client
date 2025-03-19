@@ -1,11 +1,8 @@
-import React from 'react';
+import { redirect } from "next/navigation";
 
-const page = () => {
-    return (
-        <div>
-            customer dashboard
-        </div>
-    );
+const Page = () => {
+  redirect("/dashboard/customer/my-order"); // Replace with your target route
+  return null;
 };
 
-export default page;
+export default Page;

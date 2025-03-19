@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "../../api/baseApi";
 
 const authApi = baseApi.injectEndpoints({
@@ -87,10 +88,19 @@ const authApi = baseApi.injectEndpoints({
       },
     }),
     getMe: builder.query({
-      query: () => ({
-        url: "/user/get-me",
-        method: "GET",
-      }),
+      query: (data) => {
+        const params = new URLSearchParams();
+        if (data) {
+          data?.forEach((item: any) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+        return {
+          url: "/user/get-me",
+          method: "GET",
+          params: params,
+        };
+      },
       providesTags: ["user"],
     }),
   }),
