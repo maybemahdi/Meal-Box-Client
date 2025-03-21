@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-import type React from "react";
-import Image from "next/image";
-import { IMeal } from "@/types";
-import { BsStarFill } from "react-icons/bs";
-import { useRouter } from "next/navigation";
-import Button from "@/components/shared/Button/Button";
-import MyModal from "@/components/shared/Modal/MyModal";
-import { useState } from "react";
-import { Rating, Star } from "@smastrom/react-rating";
-import "@smastrom/react-rating/style.css";
-import { z } from "zod";
-import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
-import { zodResolver } from "@hookform/resolvers/zod";
-import MyFormTextArea from "@/components/ui/MyForm/MyFormTextArea/MyFormTextArea";
-import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
-import { useCreateReviewMutation } from "@/redux/features/review/review.api";
+'use client';
+import type React from 'react';
+import Image from 'next/image';
+import { IMeal } from '@/types';
+import { BsStarFill } from 'react-icons/bs';
+import { useRouter } from 'next/navigation';
+import Button from '@/components/shared/Button/Button';
+import MyModal from '@/components/shared/Modal/MyModal';
+import { useState } from 'react';
+import { Rating, Star } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
+import { z } from 'zod';
+import MyFormWrapper from '@/components/ui/MyForm/MyFormWrapper/MyFormWrapper';
+import { zodResolver } from '@hookform/resolvers/zod';
+import MyFormTextArea from '@/components/ui/MyForm/MyFormTextArea/MyFormTextArea';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
+import { useCreateReviewMutation } from '@/redux/features/review/review.api';
 
 const validationSchema = z.object({
   comment: z.string({
-    required_error: "Comment is required",
+    required_error: 'Comment is required',
   }),
 });
 
@@ -64,7 +64,7 @@ export const MealCard = ({
     };
     const res = await handleAsyncWithToast(async () => {
       return createReview(payload);
-    }, "Submitting...");
+    }, 'Submitting...');
     if (res?.data?.success) {
       setIsModalOpen(false);
       reset();
@@ -74,7 +74,7 @@ export const MealCard = ({
     <>
       <div
         onClick={() => setIsModalOpen(true)}
-        className="group cursor-pointer relative overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:shadow-xl"
+        className="group cursor-pointer relative overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:shadow-xl sm:h-[450px]"
       >
         {/* Availability badge */}
         {!availability && (
@@ -87,11 +87,11 @@ export const MealCard = ({
         <div className="relative h-48 w-full overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
           <Image
-            src={image || "/placeholder.svg?height=192&width=384"}
+            src={image || '/placeholder.svg?height=192&width=384'}
             alt={name}
             fill
             className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              !availability ? "grayscale" : ""
+              !availability ? 'grayscale' : ''
             }`}
           />
 
@@ -125,21 +125,21 @@ export const MealCard = ({
           </p>
 
           {/* Ingredients */}
-          <div className="mb-4 flex-grow">
-            <h4 className="mb-2 text-sm font-semibold text-gray-700">
-              Ingredients:
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {ingredients.map((ingredient, index) => (
-                <span
-                  key={index}
-                  className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700"
-                >
-                  {ingredient}
-                </span>
-              ))}
+            <div className="mb-4 flex-grow">
+              <h4 className="mb-2 text-sm font-semibold text-gray-700">
+                Ingredients:
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {ingredients.map((ingredient, index) => (
+                  <span
+                    key={index}
+                    className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700"
+                  >
+                    {ingredient}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
 
           {/* Action button */}
           <div>
@@ -152,19 +152,15 @@ export const MealCard = ({
                 disabled={!availability}
                 className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
                   availability
-                    ? "bg-primary text-white hover:bg-emerald-700"
-                    : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    ? 'bg-primary text-white hover:bg-emerald-700'
+                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {availability ? "Order Now" : "Not Available"}
+                {availability ? 'Order Now' : 'Not Available'}
               </button>
             ) : (
-              <div className="flex items-center justify-between gap-3">
-                <Button
-                  onClick={onEdit}
-                  label="Edit"
-                  fullWidth
-                />
+              <div className="flex items-center flex-wrap justify-between gap-3">
+                <Button onClick={onEdit} label="Edit" fullWidth />
                 <Button
                   onClick={onDelete}
                   label="Delete"
@@ -179,19 +175,19 @@ export const MealCard = ({
       <MyModal
         isModalOpen={isModalOpen}
         handleCancel={handleCancel}
-        width={"85%"}
+        width={'85%'}
       >
         <div className="flex flex-col md:flex-row max-w-4xl w-full bg-white overflow-hidden rounded-lg">
           {/* Left side - Image */}
           <div className="relative w-full md:w-1/2 h-64 md:h-auto rounded-lg">
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 rounded-lg"></div>
             <Image
-              src={image || "/placeholder.svg?height=400&width=400"}
+              src={image || '/placeholder.svg?height=400&width=400'}
               alt={name}
               fill
               priority
               className={`object-cover md:rounded-r-lg rounded-lg ${
-                !availability ? "grayscale" : ""
+                !availability ? 'grayscale' : ''
               }`}
             />
 
@@ -258,11 +254,11 @@ export const MealCard = ({
               disabled={!availability}
               className={`mt-2 w-full rounded-lg py-2 text-center font-medium transition-colors ${
                 availability
-                  ? "bg-primary text-white hover:bg-emerald-700"
-                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  ? 'bg-primary text-white hover:bg-emerald-700'
+                  : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
             >
-              {availability ? "Order Now" : "Not Available"}
+              {availability ? 'Order Now' : 'Not Available'}
             </button>
 
             {/* review  */}
@@ -274,8 +270,8 @@ export const MealCard = ({
                   onChange={setRating}
                   itemStyles={{
                     itemShapes: Star,
-                    activeFillColor: "#F79F39",
-                    inactiveFillColor: "#E6E8EC",
+                    activeFillColor: '#F79F39',
+                    inactiveFillColor: '#E6E8EC',
                   }}
                   isRequired
                 />
@@ -289,11 +285,11 @@ export const MealCard = ({
               >
                 <div className="w-full">
                   <MyFormTextArea
-                    name={"comment"}
+                    name={'comment'}
                     placeHolder="Rate the meal"
                   />
                 </div>
-                <Button label={"Submit"} type="submit" />
+                <Button label={'Submit'} type="submit" />
               </MyFormWrapper>
             </div>
           </div>

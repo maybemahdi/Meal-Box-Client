@@ -1,30 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+'use client';
 
-import { Steps, Radio } from "antd";
-import Image from "next/image";
-import { CheckOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import mastercard from "@/assets/images/Mastercard.png";
-import visa from "@/assets/images/Visa.png";
-import amex from "@/assets/images/Amex.png";
+import { Steps, Radio } from 'antd';
+import Image from 'next/image';
+import { CheckOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import mastercard from '@/assets/images/Mastercard.png';
+import visa from '@/assets/images/Visa.png';
+import amex from '@/assets/images/Amex.png';
 
-import { Typography } from "antd";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Elements } from "@stripe/react-stripe-js";
-import StripeCardForm from "./StripeCardForm";
-import { loadStripe } from "@stripe/stripe-js";
-import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
-import { useGetMeQuery } from "@/redux/features/auth/authApi";
-import Loading from "@/components/shared/Loading/Loading";
-import Button from "@/components/shared/Button/Button";
-import Link from "next/link";
-import AddAddress from "./AddAddress";
-import { useGetMyAddressQuery } from "@/redux/features/address/address.api";
-import { useGetSingleMealQuery } from "@/redux/features/meal/meal.customer.api";
-import { useCreateOrderMutation } from "@/redux/features/payment/payment.api";
-import { useAppSelector } from "@/redux/hooks";
-import { selectCurrentToken } from "@/redux/features/auth/authSlice";
+import { Typography } from 'antd';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Elements } from '@stripe/react-stripe-js';
+import StripeCardForm from './StripeCardForm';
+import { loadStripe } from '@stripe/stripe-js';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
+import { useGetMeQuery } from '@/redux/features/auth/authApi';
+import Loading from '@/components/shared/Loading/Loading';
+import Button from '@/components/shared/Button/Button';
+import Link from 'next/link';
+import AddAddress from './AddAddress';
+import { useGetMyAddressQuery } from '@/redux/features/address/address.api';
+import { useGetSingleMealQuery } from '@/redux/features/meal/meal.customer.api';
+import { useCreateOrderMutation } from '@/redux/features/payment/payment.api';
+import { useAppSelector } from '@/redux/hooks';
+import { selectCurrentToken } from '@/redux/features/auth/authSlice';
 
 const { Title, Text } = Typography;
 
@@ -33,15 +33,15 @@ const OrderMealPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const mealId = searchParams.get("mealId");
-  const pickupDate = localStorage.getItem("pickupDate");
-  const customization = localStorage.getItem("customization");
+  const mealId = searchParams.get('mealId');
+  const pickupDate = localStorage.getItem('pickupDate');
+  const customization = localStorage.getItem('customization');
 
   const {
-    data: response,
-    isLoading,
-    isFetching,
-  } = useGetMyAddressQuery(undefined, { skip: !userToken });
+    data: me,
+    isLoading: isMeLoading,
+    isFetching: isMeFetching,
+  } = useGetMeQuery(undefined, { skip: !userToken });
 
   const {
     data: responseOfSingleMeal,
@@ -50,28 +50,18 @@ const OrderMealPage = () => {
   } = useGetSingleMealQuery(mealId, {
     skip: !mealId,
   });
+
   const {
-    data: me,
-    isLoading: isMeLoading,
-    isFetching: isMeFetching,
-  } = useGetMeQuery(undefined, { skip: !userToken });
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetMyAddressQuery(undefined, { skip: !userToken || currentStep !== 1 });
 
   const [createOrder] = useCreateOrderMutation();
 
   if (!mealId) {
-    router.push("/shop");
+    router.push('/shop');
     return;
-  }
-
-  if (
-    isLoading ||
-    isFetching ||
-    isSingleMealLoading ||
-    isSingleMealFetching ||
-    isMeLoading ||
-    isMeFetching
-  ) {
-    return <Loading />;
   }
 
   const myAddress = response?.data;
@@ -94,7 +84,7 @@ const OrderMealPage = () => {
 
   if (!stripeKey) {
     console.error(
-      "Stripe publishable key is missing. Check your environment variables."
+      'Stripe publishable key is missing. Check your environment variables.'
     );
   }
 
@@ -106,18 +96,29 @@ const OrderMealPage = () => {
         paymentMethodId: paymentMethodId,
         customerId: me?.data?._id,
         mealId: mealId,
-        customization: customization || "",
+        customization: customization || '',
         schedule: pickupDate,
         deliveryAddress: `House: ${myAddress?.houseNo}, Street: ${myAddress?.pickupStreet}, Zipcode: ${myAddress?.zipCode}, City: ${myAddress?.city}`,
       });
-    }, "Ordering...");
+    }, 'Ordering...');
     if (res?.data?.success) {
       setCurrentStep((prev) => prev + 1);
-      localStorage.removeItem("pickupDate");
-      localStorage.removeItem("customization");
+      localStorage.removeItem('pickupDate');
+      localStorage.removeItem('customization');
       console.log(res?.data);
     }
   };
+
+  if (
+    isLoading ||
+    isFetching ||
+    isSingleMealLoading ||
+    isSingleMealFetching ||
+    isMeLoading ||
+    isMeFetching
+  ) {
+    return <Loading />;
+  }
 
   return (
     <div className="w-[90%] mx-auto my-8 md:my-12">
@@ -126,53 +127,53 @@ const OrderMealPage = () => {
           current={currentStep}
           items={[
             {
-              title: "Shipping Address",
-              status: currentStep === 0 ? "process" : "finish",
+              title: 'Shipping Address',
+              status: currentStep === 0 ? 'process' : 'finish',
               icon: currentStep > 0 ? <CheckOutlined /> : undefined,
             },
             {
-              title: "Order Summary",
+              title: 'Order Summary',
               status:
                 currentStep === 1
-                  ? "process"
+                  ? 'process'
                   : currentStep > 1
-                  ? "finish"
-                  : "wait",
+                  ? 'finish'
+                  : 'wait',
               icon: currentStep > 1 ? <CheckOutlined /> : undefined,
             },
             {
-              title: "Payment Method",
+              title: 'Payment Method',
               status:
                 currentStep === 2
-                  ? "process"
+                  ? 'process'
                   : currentStep > 2
-                  ? "finish"
-                  : "wait",
+                  ? 'finish'
+                  : 'wait',
               icon: currentStep > 2 ? <CheckOutlined /> : undefined,
             },
             {
-              title: "Confirm Payment",
+              title: 'Confirm Payment',
               status:
                 currentStep === 3
-                  ? "process"
+                  ? 'process'
                   : currentStep > 3
-                  ? "finish"
-                  : "wait",
+                  ? 'finish'
+                  : 'wait',
               icon:
                 currentStep > 3 ? (
                   <CheckOutlined />
                 ) : currentStep > 3 ? (
-                  "finish"
+                  'finish'
                 ) : undefined,
             },
             {
-              title: "Completed Payment",
+              title: 'Completed Payment',
               status:
                 currentStep === 4
-                  ? "process"
+                  ? 'process'
                   : currentStep > 4
-                  ? "finish"
-                  : "wait",
+                  ? 'finish'
+                  : 'wait',
               icon: currentStep > 4 ? <CheckOutlined /> : undefined,
             },
           ]}
@@ -338,11 +339,11 @@ const OrderMealPage = () => {
             </p>
             <Link
               href={
-                me?.data?.role === "CUSTOMER"
-                  ? "/dashboard/customer/my-order"
-                  : me?.data?.role === "PROVIDER"
-                  ? "/dashboard/provider/my-order"
-                  : "/dashboard/admin/my-order"
+                me?.data?.role === 'CUSTOMER'
+                  ? '/dashboard/customer/my-order'
+                  : me?.data?.role === 'PROVIDER'
+                  ? '/dashboard/provider/my-order'
+                  : '/dashboard/admin/my-order'
               }
             >
               <Button label="My Order" variant="outline" />

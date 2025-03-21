@@ -13,6 +13,22 @@ const providerMealApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["meal"],
     }),
+    getAllMealByProvider: builder.query({
+      query: (data) => {
+        const params = new URLSearchParams();
+        if (data) {
+          data?.forEach((item: any) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+        return {
+          url: `/meal/provider`,
+          method: "GET",
+          params: params,
+        };
+      },
+      providesTags: ["meal"],
+    }),
     updateMeal: builder.mutation({
       query: ({ formData, id }) => {
         return {
@@ -37,6 +53,7 @@ const providerMealApi = baseApi.injectEndpoints({
 
 export const {
   useCreateMealMutation,
+  useGetAllMealByProviderQuery,
   useUpdateMealMutation,
   useDeleteMealMutation,
 } = providerMealApi;

@@ -3,7 +3,6 @@
 import React from "react";
 import Button from "@/components/shared/Button/Button";
 import Loading from "@/components/shared/Loading/Loading";
-import { useGetAllMealQuery } from "@/redux/features/meal/meal.customer.api";
 import { IMeal } from "@/types";
 import { useEffect, useState } from "react";
 import { Dropdown, MenuProps, Pagination } from "antd";
@@ -14,7 +13,7 @@ import { MealCard } from "@/components/pages/find-meals/MealCard";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
-import { useDeleteMealMutation } from "@/redux/features/meal/meal.provider.api";
+import { useDeleteMealMutation, useGetAllMealByProviderQuery } from "@/redux/features/meal/meal.provider.api";
 
 const ManageMenuPage = () => {
   const [filterByAvailability, setFilterByAvailability] = useState("All");
@@ -60,7 +59,7 @@ const ManageMenuPage = () => {
     data: response,
     isLoading,
     isFetching,
-  } = useGetAllMealQuery(objectQuery);
+  } = useGetAllMealByProviderQuery(objectQuery);
 
   const [deleteMeal] = useDeleteMealMutation();
 

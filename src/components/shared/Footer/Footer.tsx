@@ -38,7 +38,7 @@ const Footer = () => {
                 <Link href="/dashboard/provider">Provider Dashboard</Link>
               </li>
               <li>
-                <Link href="/dashboard/post-meal-menu">Post Menu</Link>
+                <Link href="/dashboard/provider/manage-menu/add-menu">Add Menu</Link>
               </li>
             </ul>
           </div>

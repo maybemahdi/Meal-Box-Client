@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-import Loading from "@/components/shared/Loading/Loading";
-import { useGetAllMealQuery } from "@/redux/features/meal/meal.customer.api";
-import { IMeal } from "@/types";
-import React, { useEffect, useState } from "react";
-import { MealCard } from "./MealCard";
-import { Dropdown, MenuProps, Pagination } from "antd";
-import "./findMeal.css";
-import Search, { SearchProps } from "antd/es/input/Search";
-import { ChevronDown, RotateCcw } from "lucide-react";
-import { useGetMeQuery } from "@/redux/features/auth/authApi";
-import { useAppSelector } from "@/redux/hooks";
-import { selectCurrentToken } from "@/redux/features/auth/authSlice";
+'use client';
+import Loading from '@/components/shared/Loading/Loading';
+import { useGetAllMealQuery } from '@/redux/features/meal/meal.customer.api';
+import { IMeal } from '@/types';
+import React, { useEffect, useState } from 'react';
+import { MealCard } from './MealCard';
+import { Dropdown, MenuProps, Pagination } from 'antd';
+import './findMeal.css';
+import Search, { SearchProps } from 'antd/es/input/Search';
+import { ChevronDown, RotateCcw } from 'lucide-react';
+import { useGetMeQuery } from '@/redux/features/auth/authApi';
+import { useAppSelector } from '@/redux/hooks';
+import { selectCurrentToken } from '@/redux/features/auth/authSlice';
 
 const FindMealsPage = () => {
   const userToken = useAppSelector(selectCurrentToken);
-  const [filterByAvailability, setFilterByAvailability] = useState("All");
-  const [sortByRating, setSortByRating] = useState("");
+  const [filterByAvailability, setFilterByAvailability] = useState('All');
+  const [sortByRating, setSortByRating] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchText, setSearchText] = useState<{ name: string; value: any }[]>(
@@ -35,10 +35,10 @@ const FindMealsPage = () => {
 
   useEffect(() => {
     setObjectQuery([
-      { name: "page", value: page },
-      { name: "limit", value: pageSize },
-      { name: "availability", value: filterByAvailability },
-      { name: "sort", value: sortByRating },
+      { name: 'page', value: page },
+      { name: 'limit', value: pageSize },
+      { name: 'availability', value: filterByAvailability },
+      { name: 'sort', value: sortByRating },
       ...searchText,
     ]);
   }, [page, pageSize, filterByAvailability, sortByRating]);
@@ -46,10 +46,10 @@ const FindMealsPage = () => {
   useEffect(() => {
     setPage(1);
     setObjectQuery([
-      { name: "page", value: 1 },
-      { name: "limit", value: pageSize },
-      { name: "availability", value: filterByAvailability },
-      { name: "sort", value: sortByRating },
+      { name: 'page', value: 1 },
+      { name: 'limit', value: pageSize },
+      { name: 'availability', value: filterByAvailability },
+      { name: 'sort', value: sortByRating },
       ...searchText,
     ]);
   }, [searchText]);
@@ -65,25 +65,25 @@ const FindMealsPage = () => {
     isFetching: isMeFetching,
   } = useGetMeQuery(undefined, { skip: !userToken });
 
-  const onSearch: SearchProps["onSearch"] = (value) =>
-    setSearchText([{ name: "searchTerm", value: value }]);
+  const onSearch: SearchProps['onSearch'] = (value) =>
+    setSearchText([{ name: 'searchTerm', value: value }]);
 
   if (isLoading || isFetching || isMeLoading || isMeFetching) {
     return <Loading />;
   }
   const meals = response?.data?.meals;
   const resetSearchAndFilter = () => {
-    setFilterByAvailability("All");
-    setSortByRating("");
+    setFilterByAvailability('All');
+    setSortByRating('');
     setSearchText([]);
     setPage(1);
   };
-  const filterItems: MenuProps["items"] = [
+  const filterItems: MenuProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: (
         <button
-          onClick={() => setFilterByAvailability("All")}
+          onClick={() => setFilterByAvailability('All')}
           rel="noopener noreferrer"
           className="text-gray-500 w-full text-start"
         >
@@ -92,10 +92,10 @@ const FindMealsPage = () => {
       ),
     },
     {
-      key: "2",
+      key: '2',
       label: (
         <button
-          onClick={() => setFilterByAvailability("Available")}
+          onClick={() => setFilterByAvailability('Available')}
           rel="noopener noreferrer"
           className="text-primary w-full text-start"
         >
@@ -104,10 +104,10 @@ const FindMealsPage = () => {
       ),
     },
     {
-      key: "3",
+      key: '3',
       label: (
         <button
-          onClick={() => setFilterByAvailability("Not Available")}
+          onClick={() => setFilterByAvailability('Not Available')}
           rel="noopener noreferrer"
           className="text-red-500 w-full text-start"
         >
@@ -116,12 +116,12 @@ const FindMealsPage = () => {
       ),
     },
   ];
-  const sortByRatingItems: MenuProps["items"] = [
+  const sortByRatingItems: MenuProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: (
         <button
-          onClick={() => setSortByRating("l2h")}
+          onClick={() => setSortByRating('l2h')}
           rel="noopener noreferrer"
           className="text-gray-500 w-full text-start"
         >
@@ -130,10 +130,10 @@ const FindMealsPage = () => {
       ),
     },
     {
-      key: "2",
+      key: '2',
       label: (
         <button
-          onClick={() => setSortByRating("h2l")}
+          onClick={() => setSortByRating('h2l')}
           rel="noopener noreferrer"
           className="text-gray-500 w-full text-start"
         >
@@ -159,7 +159,7 @@ const FindMealsPage = () => {
         <div className="flex flex-wrap items-center gap-5">
           <Dropdown
             menu={{ items: filterItems }}
-            trigger={["click"]}
+            trigger={['click']}
             placement="bottom"
             arrow
           >
@@ -183,7 +183,7 @@ const FindMealsPage = () => {
           </Dropdown>
           <Dropdown
             menu={{ items: sortByRatingItems }}
-            trigger={["click"]}
+            trigger={['click']}
             placement="bottom"
             arrow
           >
@@ -214,7 +214,7 @@ const FindMealsPage = () => {
         </div>
         {/* filter options */}
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
         {meals?.length ? (
           meals?.map((meal: IMeal) => (
             <MealCard key={meal?._id} meal={meal} userId={me?.data?._id} />

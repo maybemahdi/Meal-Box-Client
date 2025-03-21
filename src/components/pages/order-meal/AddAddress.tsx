@@ -72,6 +72,7 @@ const AddAddress = ({
     const payload = {
       ...formData,
     };
+    delete payload?.customization;
 
     if (!myAddress?._id) {
       const response = await handleAsyncWithToast(async () => {
